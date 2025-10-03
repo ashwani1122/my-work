@@ -38,9 +38,9 @@ export default function ContactForm() {
         <textarea rows={4} style={{padding:"0.2rem",
             border:"2px solid black" ,
             backgroundColor:"#1e293b",borderRadius:"10px",color:"white"}} name="user_message" placeholder="Your Message" required className="border p-2 rounded" />
-        <button type="submit" style={{backgroundColor:"#007bff",
+        <button  type="submit" style={{backgroundColor:"#002df3ff",
             cursor:"pointer"
-            ,padding:"0.5rem",border:"1px solid white" ,borderRadius:"10px"}}>Send Message</button>
+            ,padding:"0.5rem",border:"1px solid white" ,borderRadius:"10px",color:"black"}}>Send Message</button>
         </form>
     );
 }

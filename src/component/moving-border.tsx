@@ -61,7 +61,7 @@ const MovingBorderComplete = () => {
     };
 
     updateBorderPosition();
-    window.addEventListener('resize', updateBorderPosition); // Update on resize
+    window.addEventListener('resize', updateBorderPosition); 
 
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % elements.length);
@@ -79,6 +79,11 @@ const MovingBorderComplete = () => {
       background: 'hsl(220, 15%, 5%)',
       color: 'hsl(220, 5%, 95%)',
       padding: '1rem',
+      display: 'flex',
+      flexDirection: 'column' as const,
+      gap: '1rem',
+      alignItems: 'center',
+      justifyContent: 'center',
     },
     navBar: {
       display: 'flex',
@@ -170,7 +175,14 @@ const MovingBorderComplete = () => {
             90% { opacity: 1; }
             100% { top: 100%; opacity: 0; }
           }
-
+          .grid-background {
+            background-color: #b30a0aff;
+            background-image: 
+              linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            background-attachment: fixed;
+          }
           .scanning-line-vertical {
             position: absolute;
             top: 0;
@@ -217,7 +229,7 @@ const MovingBorderComplete = () => {
           /* Responsive Styles */
           @media (max-width: 768px) {
             .nav-bar > div {
-              width: 90%;
+              width: 60%;
               flex-direction: column;
               gap: 0.5rem;
               padding: 0.5rem;
@@ -226,12 +238,12 @@ const MovingBorderComplete = () => {
             .content-container > div {
               width: 90%;
               flex-direction: column;
-              align-items: center;
+              alignItems: center;
             }
 
             .content-container > div > div:first-child {
               flex-direction: column;
-              align-items: center;
+              alignItems: center;
               text-align: center;
             }
 
@@ -248,10 +260,15 @@ const MovingBorderComplete = () => {
               flex-direction: column;
               gap: 1rem;
             }
+              .depin{
+                background-color:"red"
+              }
 
             .contact-section > div {
+              display: flex;
               flex-direction: column;
-              width: 90%;
+              align-items: center;
+              flex-wrap: wrap;
             }
 
             .contact-section > div > div:last-child {
@@ -263,6 +280,10 @@ const MovingBorderComplete = () => {
           @media (max-width: 480px) {
             .card {
               width: 100px !important;
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              justify-content: center;
             }
 
             .title {
@@ -301,13 +322,14 @@ const MovingBorderComplete = () => {
           borderRadius: '40px',
           padding: '0.4rem',
           color: 'white',
+          backgroundColor: "oklch(39.8% 0.195 277.366)"
         }}>
           <span style={{ cursor: 'pointer' }}><a href="#home">Home</a></span>
           <span><a href="#projects">Projects</a></span>
           <span><a href="#contact">Contact</a></span>
         </div>
       </span>
-      <div id="home" style={styles.container}>
+      <div id="home" style={styles.container} className="grid-background">
         <div style={styles.wrapper}>
           <div ref={containerRef} style={styles.contentContainer} className="content-container">
             <div ref={borderRef} style={styles.movingBorder} />
@@ -323,12 +345,12 @@ const MovingBorderComplete = () => {
               gap: '1.5rem',
             }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap' as const }}>
-                <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap' as const }}>
+                <div style={{ display: 'flex', justifyContent: 'center',alignItems:'center', gap: '1rem', flexWrap: 'wrap' as const }}>
                   <div style={styles.card} className="card">
                     <img
                       className="content-item"
-                      style={{ width: '50%', height: 'auto', borderRadius: '5px', padding: '0.5rem' }}
-                      src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3"
+                      style={{ width: '70%', height: 'auto', borderRadius: '5px' }}
+                      src={'../assets/profile.png'}
                       alt="Profile"
                     />
                   </div>
@@ -420,31 +442,53 @@ const MovingBorderComplete = () => {
                 ))}
               </div>
             </div>
-            <div id="projects" style={{ marginTop: '4rem' }}>
+            <div id="projects" style={{ marginTop: '10rem', gap: "1rem" }}>
               <h1 style={{ fontSize: 'clamp(1.5rem, 5vw, 2rem)' }}>Projects</h1>
-              <div className="projects-grid" style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' as const }}>
-                <div style={{ border: '1px solid white', borderRadius: '10px', padding: '5px', flex: '1 1 clamp(250px, 45%, 400px)' }}>
+              <div className="projects-grid" style={{display:"flex" ,gap:"1rem",flexWrap:"wrap",justifyContent:"center",flex:"1 1 clamp(250px, 45%, 400px)"}}>
+                <div className='depin' style={{ border: '1px solid white', borderRadius: '10px', padding: '5px', flex: '1 1 clamp(250px, 45%, 400px)' }}>
+                 
                   <img style={{ borderRadius: '10px', width: '100%', height: 'auto' }} src="../assets/Depin.png" alt="Depin" />
-                  <p style={{ fontSize: 'clamp(0.8rem, 2.5vw, 1rem)' }}>
-                    This is decentralized physical infrastructure built using Next.js, Express, Bun, Prisma, Turborepo, Tailwind, TypeScript, PostgreSQL.
-                  </p>
+                  <a href="https://github.com/ashwani1122/depin" target="_blank">
+                  <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexDirection: "row" ,backgroundColor:'#0f172a',padding: '1rem',borderRadius: '10px',width: 'min(100%, 500px)',marginTop:'1rem'}}>
+                     Github
+                  </div>
+                  </a>
                 </div>
                 <div style={{ border: '1px solid white', borderRadius: '10px', padding: '5px', flex: '1 1 clamp(250px, 45%, 400px)' }}>
+                  <a href="https://order-food-tz78.onrender.com/" target="_blank">
                   <img style={{ borderRadius: '10px', width: '100%', height: 'auto' }} src="../assets/delfood.png" alt="Delfood" />
-                  <p style={{ fontSize: 'clamp(0.8rem, 2.5vw, 1rem)' }}>
-                    This is a food delivery app built using React.js, Express, Node.js, Mongoose, MongoDB, Multer, CSS, HTML, and JavaScript.
-                  </p>
+                  </a>
+                  <a href="https://github.com/ashwani1122/Food-order/tree/main" target="_blank">
+                  <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexDirection: "row" ,backgroundColor:'#0f172a',padding: '1rem',borderRadius: '10px',width: 'min(100%, 500px)'}}>
+                    Github
+                  </div>
+                  </a>
                 </div>
-                <div style={{ border: '1px solid white', borderRadius: '10px', padding: '5px', flex: '1 1 clamp(250px, 45%, 400px)' }}>
+                <div style={{display:"flex" ,gap:"1rem",flexWrap:"wrap",justifyContent:"center",flex:"1 1 clamp(250px, 45%, 400px)"}}>
+                <div style={{ border: '1px solid white', borderRadius: '10px', padding: '5px',display:'flex',flexDirection:'column',gap:'1rem'}}>
+                  <a href="https://pay-online-lijb.vercel.app/" target="_blank">
                   <img style={{ borderRadius: '10px', width: '100%', height: 'auto' }} src="../assets/paytm.png" alt="Paytm" />
-                  <p style={{ fontSize: 'clamp(0.8rem, 2.5vw, 1rem)' }}>
-                    This is a payment app built using React.js, Express, Node.js, Mongoose, MongoDB, Multer, CSS, HTML, and TypeScript.
-                  </p>
+                  
+                  </a>
+                   <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' ,backgroundColor:'#0f172a',padding: '1rem',borderRadius: '10px'}}>
+                    <a href="https://github.com/ashwani1122/payOnline" target="_blank">Github</a>
+                  </div>
                 </div>
+                <a href="https://predstock.vercel.app/" target="_blank">
+                <div style={{ border: '1px solid white', borderRadius: '10px', padding: '5px',display:'flex',flexDirection:'column',gap:'1rem'}}>
+                  <img style={{ borderRadius: '10px', width: '100%', height: 'auto' }} src="../assets/predstock.png" alt="Paytm" />
+                  
+                  <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexDirection: "row" ,backgroundColor:'#0f172a',padding: '1rem',borderRadius: '10px'}}>
+                    <a href="https://github.com/ashwani1122/stock-pred" target="_blank">Github</a>
+                  </div>
+                </div>
+                </a>
+                
+              </div>
               </div>
             </div>
             <div id="contact" className="contact-section" style={{
-              marginTop: '1rem',
+              marginTop: '10rem',
               alignItems: 'center',
               display: 'flex',
               flexDirection: 'column' as const,
@@ -452,7 +496,7 @@ const MovingBorderComplete = () => {
               fontFamily: 'sans-serif',
             }}>
               <h1 style={{ marginTop: '1rem', fontSize: 'clamp(1.5rem, 5vw, 2rem)' }}>Get in touch</h1>
-              <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' as const, justifyContent: 'center',flexDirection:"row" }}>
+              <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexDirection: "row" }}>
                 <div><ContactForm /></div>
                 <div style={{
                   backgroundColor: '#0f172a',
@@ -486,10 +530,9 @@ const MovingBorderComplete = () => {
                 display: 'flex',
                 flexDirection: 'column' as const,
                 borderRadius: '10px',
-                marginTop: '20px',
-                width: 'min(90%, 800px)',
+                marginTop: '10rem',
               }}>
-                <h1 style={{ fontSize: 'clamp(1.2rem, 4vw, 1.5rem)' }}>Let's build together</h1>
+                <h1 style={{ fontSize: 'clamp(1.2rem, 4vw, 1.5rem)', }}>Let's build together</h1>
                 <p style={{ fontSize: 'clamp(0.8rem, 2.5vw, 1rem)' }}>
                   I'm always interested in discussing new opportunities, innovative projects, and potential collaborations in the full stack development space. If you're interested in working together, feel free to reach out to me.
                 </p>
@@ -502,7 +545,7 @@ const MovingBorderComplete = () => {
               </div>
             </div>
           </div>
-          <hr style={{ width: '100%', marginTop: '2rem' }} />
+          <hr style={{ width: '100%', marginTop: "14rem" }} />
           <div style={{
             display: 'flex',
             gap: '1rem',
