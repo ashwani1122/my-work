@@ -230,11 +230,15 @@ const MovingBorderComplete = () => {
           @media (max-width: 768px) {
             .nav-bar > div {
               width: 60%;
-              flex-direction: column;
-              gap: 0.5rem;
+              gap: 0.2rem;
               padding: 0.5rem;
             }
-
+              .card > img {
+              width: 300px !important;
+            }
+            .contentxg > a{
+              display:none;
+            }
             .content-container > div {
               width: 90%;
               flex-direction: column;
@@ -279,13 +283,20 @@ const MovingBorderComplete = () => {
 
           @media (max-width: 480px) {
             .card {
-              width: 100px !important;
               display: flex;
               flex-direction: column;
               align-items: center;
               justify-content: center;
             }
-
+            .nav-bar > div {
+              width: 30%;
+              gap: 0.5rem;
+              padding: 0.5rem;
+              fontSize: '0.8rem',
+            }
+            .card > img {
+              width: 200px !important;
+            }
             .title {
               font-size: 1.2rem !important;
             }
@@ -374,7 +385,7 @@ const MovingBorderComplete = () => {
                     </div>
                   </div>
                 </div>
-                <div className="content-item" style={{ display: 'flex', gap: '0.8rem', width: '80px', height: '30px', padding: '0.3rem', alignItems: 'center', justifyContent: 'center' }}>
+                <div className="contentxg" style={{ display: 'flex', gap: '0.8rem', width: '80px', height: '30px', padding: '0.3rem', alignItems: 'center', justifyContent: 'center' }}>
                   <a href="https://x.com/243ashwani"><XIcon /></a>
                   <a href="https://github.com/ashwani1122"><GitHubIcon /></a>
                 </div>
