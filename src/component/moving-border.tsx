@@ -132,7 +132,7 @@ const MovingBorderComplete = () => {
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      width: 'clamp(150px, 30vw, 200px)',
+      width: 'clamp(250px, 30vw, 200px)',
     },
     infoSection: {
       marginTop: '3rem',
@@ -288,14 +288,13 @@ const MovingBorderComplete = () => {
               align-items: center;
               justify-content: center;
             }
-            .nav-bar > div {
-              width: 30%;
-              gap: 0.5rem;
+            .nav-bar> div {
+              gap: 0.2rem;
               padding: 0.5rem;
-              fontSize: '0.8rem',
+              fontSize: '0.4rem',
             }
             .card > img {
-              width: 200px !important;
+              width: 400px !important;
             }
             .title {
               font-size: 1.2rem !important;
@@ -328,7 +327,7 @@ const MovingBorderComplete = () => {
           alignItems: 'center',
           justifyContent: 'center',
           gap: '1rem',
-          width: 'clamp(200px, 50%, 400px)',
+          width: 'clamp(300px, 50%, 400px)',
           border: '1px solid gray',
           borderRadius: '40px',
           padding: '0.4rem',
