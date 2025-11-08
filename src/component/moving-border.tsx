@@ -400,8 +400,7 @@ const MovingBorderComplete = () => {
                 About Me
               </h1>
               <p style={{ fontSize: 'clamp(0.9rem, 3vw, 1.2rem)', lineHeight: '1.5', fontFamily: 'sans-serif' }}>
-                Hey, I'm Ashwani, a Computer Science undergrad and full-stack developer who thrives on building and shipping solutions that truly matter. I work primarily with React.js, Next.js, and Node.js, using TypeScript to craft robust applications on both the frontend and backend.
-              </p>
+                Hey, I'm Ashwani, a Computer Science undergrad and full-stack developer who thrives on building and shipping solutions that truly matter.I could be an excellent fit if you seek a developer whose passion is inseparable from their craft. My approach is defined by deep product ownership—I don't just deliver to specification; I relentlessly refine, constantly seeking out opportunities to elevate the quality and user experience. If you’re looking for a developer who builds with heart, technical excellence, and an unwavering commitment to the final outcome, let’s talk.</p>
               <p style={{ fontSize: 'clamp(0.9rem, 3vw, 1.2rem)', lineHeight: '1.5', fontFamily: 'sans-serif' }}>
                 If you've got an idea or want to collaborate on an exciting project, feel free to drop me a DM.
               </p>
