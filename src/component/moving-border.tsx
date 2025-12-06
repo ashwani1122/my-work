@@ -354,17 +354,76 @@ const MovingBorderComplete: React.FC = () => {
                   </div>
 
 
-              <div className="w-full bg-slate-800/40 border border-slate-600 rounded-xl p-6 mt-8">
-                <h3 className="text-xl font-medium">Let's build together</h3>
-                <p className="mt-2 text-slate-300">I'm always interested in discussing new opportunities, innovative projects, and potential collaborations in the full stack development space. If you're interested in working together, feel free to reach out to me.</p>
+              <div
+  className="
+    w-full 
+    bg-slate-800/50 
+    border border-slate-700 
+    rounded-2xl 
+    p-8 
+    mt-12 
+    shadow-xl 
+    backdrop-blur-md 
+    relative 
+    overflow-hidden 
+    group
+  "
+>
+  {/* subtle gradient highlight on hover */}
+  <div 
+    className="
+      absolute inset-0 
+      bg-gradient-to-br from-indigo-500/10 to-purple-500/10 
+      opacity-0 
+      group-hover:opacity-100 
+      transition-opacity duration-500 
+      pointer-events-none
+    "
+  />
 
-                <ul className="mt-4 list-disc list-inside text-slate-300">
-                  <li>Frontend Development</li>
-                  <li>Backend Development</li>
-                  <li>Full Stack Development</li>
-                  <li>Technical Consulting</li>
-                </ul>
-              </div>
+  <h3 className="text-2xl font-semibold text-slate-100">
+    Let’s build together 🚀
+  </h3>
+
+  <p className="mt-3 text-slate-300 leading-relaxed">
+    I'm always excited to collaborate on meaningful projects — whether you're 
+    exploring new ideas, need help bringing a product to life, or want a partner 
+    for full-stack development. Let’s team up and create something impactful.
+  </p>
+
+  <ul className="mt-6 space-y-3">
+    {[
+      "Frontend Development",
+      "Backend Development",
+      "Full Stack Development",
+      "Technical Consulting",
+    ].map((item) => (
+      <li 
+        key={item}
+        className="
+          flex items-center gap-3 
+          text-slate-200 
+          bg-slate-700/30 
+          px-4 py-2 
+          rounded-xl 
+          border border-slate-700 
+          hover:bg-slate-700/50 
+          hover:border-slate-500 
+          transition-all 
+          duration-200
+        "
+      >
+        <span className="w-2 h-2 rounded-full bg-indigo-400 shadow-sm" />
+        <span>{item}</span>
+      </li>
+    ))}
+  </ul>
+
+  <p className="mt-6 text-sm text-slate-400">
+    Ready to start? My inbox is always open.
+  </p>
+</div>
+
             </section>
 
             {/* Footer */}
