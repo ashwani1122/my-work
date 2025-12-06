@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import emailjs from "@emailjs/browser";
 
-export default function ContactForm(): JSX.Element {
+export default function ContactForm(){
   const form = useRef<HTMLFormElement | null>(null);
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<null | "success" | "error">(null);
