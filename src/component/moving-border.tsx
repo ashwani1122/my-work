@@ -278,27 +278,81 @@ const MovingBorderComplete: React.FC = () => {
             <section id="contact" className="mx-auto w-[min(90%,800px)] mt-12 flex flex-col items-center gap-6">
               <h2 className="text-2xl md:text-3xl font-semibold">Get in touch</h2>
 
-              <div className="w-full flex flex-col md:flex-row gap-6 md:items-start md:justify-center">
-                <div className="flex-1 bg-transparent">
-                  <ContactForm />
-                </div>
+                  <div className="w-full flex flex-col md:flex-row gap-8 md:items-start md:justify-center">
 
-                <aside className="w-full md:w-80 bg-slate-800/40 border border-slate-600 rounded-xl p-4 flex flex-col gap-3">
-                  <h3 className="text-lg font-medium">Connect with me</h3>
+        {/* Contact Form Section */}
+        <div className="flex-1">
+          <ContactForm />
+        </div>
 
-                  {[
-                    { href: 'https://github.com/ashwani1122', icon: <GitHubIcon />, text: 'GitHub' },
-                    { href: 'https://x.com/243ashwani', icon: <XIcon />, text: 'Twitter' },
-                    { href: 'https://www.linkedin.com/in/ashwani-singh-308081303/', icon: <LinkedInIcon />, text: 'LinkedIn' },
-                    { href: 'https://www.instagram.com/ashwani123950', icon: <InstagramIcon />, text: 'Instagram' },
-                  ].map(link => (
-                    <a key={link.text} href={link.href} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-2 rounded-md border border-slate-600 hover:bg-slate-700/40">
-                      {link.icon}
-                      <span>{link.text}</span>
-                    </a>
-                  ))}
-                </aside>
-              </div>
+        {/* Sidebar */}
+        <aside
+          className="
+            w-full md:w-80 
+            bg-slate-800/50 
+            border border-slate-700 
+            rounded-2xl 
+            p-6 
+            flex flex-col 
+            gap-5 
+            shadow-lg 
+            backdrop-blur-md 
+            transition 
+            duration-300
+          "
+        >
+          <h3 className="text-xl font-semibold text-slate-100 mb-1">
+            Connect with me
+          </h3>
+
+          <p className="text-sm text-slate-400">
+            I'm active on the following platforms — feel free to reach out!
+          </p>
+
+          <div className="flex flex-col gap-3 mt-2">
+            {[
+              { href: "https://github.com/ashwani1122", icon: <GitHubIcon />, text: "GitHub" },
+              { href: "https://x.com/243ashwani", icon: <XIcon />, text: "Twitter" },
+              { href: "https://www.linkedin.com/in/ashwani-singh-308081303/", icon: <LinkedInIcon />, text: "LinkedIn" },
+              { href: "https://www.instagram.com/ashwani123950", icon: <InstagramIcon />, text: "Instagram" },
+            ].map((link) => (
+              <a
+                key={link.text}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="
+                  flex items-center gap-3 
+                  px-4 py-3 
+                  rounded-xl 
+                  border border-slate-700 
+                  bg-slate-700/20 
+                  hover:bg-slate-700/40 
+                  hover:border-slate-500 
+                  transition-all 
+                  duration-200 
+                  group
+                "
+              >
+                <span className="text-slate-200 group-hover:text-white transition">
+                  {link.icon}
+                </span>
+                <span className="text-slate-300 group-hover:text-white transition">
+                  {link.text}
+                </span>
+              </a>
+            ))}
+          </div>
+
+          {/* subtle bottom accent */}
+          <div className="pt-4 mt-2 border-t border-slate-700">
+            <p className="text-xs text-slate-500">
+              Let's connect and build something great.
+            </p>
+          </div>
+        </aside>
+                  </div>
+
 
               <div className="w-full bg-slate-800/40 border border-slate-600 rounded-xl p-6 mt-8">
                 <h3 className="text-xl font-medium">Let's build together</h3>
