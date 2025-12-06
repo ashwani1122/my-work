@@ -12,9 +12,9 @@ interface BorderPosition {
   height: number;
 }
 
-const MovingBorderComplete = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const borderRef = useRef<HTMLDivElement>(null);
+const MovingBorderComplete: React.FC = () => {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const borderRef = useRef<HTMLDivElement | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [elements, setElements] = useState<HTMLElement[]>([]);
 
@@ -36,10 +36,10 @@ const MovingBorderComplete = () => {
       const elementRect = element.getBoundingClientRect();
 
       const position: BorderPosition = {
-        top: elementRect.top - containerRect.top - 4,
-        left: elementRect.left - containerRect.left - 4,
-        width: elementRect.width + 8,
-        height: elementRect.height + 8,
+        top: elementRect.top - containerRect.top - 8,
+        left: elementRect.left - containerRect.left - 8,
+        width: elementRect.width + 16,
+        height: elementRect.height + 16,
       };
 
       const border = borderRef.current!;
@@ -48,6 +48,7 @@ const MovingBorderComplete = () => {
       border.style.width = `${position.width}px`;
       border.style.height = `${position.height}px`;
 
+      // remove old scanning lines
       const existingLines = border.querySelectorAll('.scanning-line-vertical, .scanning-line-horizontal');
       existingLines.forEach(line => line.remove());
 
@@ -61,7 +62,7 @@ const MovingBorderComplete = () => {
     };
 
     updateBorderPosition();
-    window.addEventListener('resize', updateBorderPosition); 
+    window.addEventListener('resize', updateBorderPosition);
 
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % elements.length);
@@ -73,502 +74,253 @@ const MovingBorderComplete = () => {
     };
   }, [currentIndex, elements]);
 
-  const styles = {
-    container: {
-      minHeight: '100vh',
-      background: 'hsl(220, 15%, 5%)',
-      color: 'hsl(220, 5%, 95%)',
-      padding: '1rem',
-      display: 'flex',
-      flexDirection: 'column' as const,
-      gap: '1rem',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    navBar: {
-      display: 'flex',
-      width: '100%',
-      paddingTop: '1rem',
-      alignItems: 'center',
-      justifyContent: 'center',
-      background: 'hsl(220, 15%, 5%)',
-    },
-    wrapper: {
-      maxWidth: '1200px',
-      margin: '0 auto',
-      width: '100%',
-    },
-    contentContainer: {
-      position: 'relative' as const,
-      display: 'flex',
-      flexDirection: 'column' as const,
-      gap: '1.5rem',
-    },
-    movingBorder: {
-      position: 'absolute' as const,
-      pointerEvents: 'none' as const,
-      border: '1px solid hsla(0, 0%, 100%, 1.00)',
-      transition: 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
-      boxShadow: '0 0 40px hsl(280, 100%, 70% / 0.3)',
-      zIndex: 10,
-      overflow: 'hidden' as const,
-    },
-    contentItem: {
-      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-      borderRadius: '0.75rem',
-      cursor: 'pointer',
-    },
-    title: {
-      background: 'linear-gradient(135deg, hsl(280, 100%, 70% / 0.8), hsl(190, 100%, 60% / 0.6))',
-      backgroundClip: 'text',
-      WebkitBackgroundClip: 'text',
-      backgroundSize: '200% 200%',
-      animation: 'glowPulse 3s ease-in-out infinite',
-      fontSize: 'clamp(1.5rem, 5vw, 2rem)',
-      fontWeight: 'bold',
-      marginBottom: '1rem',
-    },
-    card: {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      width: 'clamp(250px, 30vw, 200px)',
-    },
-    infoSection: {
-      marginTop: '3rem',
-      textAlign: 'center' as const,
-    },
-    infoTitle: {
-      fontSize: 'clamp(1.2rem, 4vw, 1.5rem)',
-      fontWeight: '600',
-      marginBottom: '1rem',
-      color: 'hsla(280, 19%, 22%, 1.00)',
-    },
-    infoText: {
-      color: 'hsl(220, 5%, 65%)',
-      maxWidth: 'clamp(300px, 80vw, 512px)',
-      margin: '0 auto',
-      lineHeight: '1.6',
-      fontSize: 'clamp(0.9rem, 3vw, 1.2rem)',
-    },
-  };
-
   return (
     <>
-      <style>
-        {`
-          @keyframes glowPulse {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-          }
+      {/* -- Custom keyframes & scanning line styles -- */}
+      <style>{`
+        @keyframes glowPulse { 0%,100%{background-position:0% 50%}50%{background-position:100% 50%} }
+        @keyframes scanHorizontal { 0%{left:-10px;opacity:0}10%{opacity:1}90%{opacity:1}100%{left:100%;opacity:0} }
+        @keyframes scanVertical { 0%{top:-10px;opacity:0}10%{opacity:1}90%{opacity:1}100%{top:100%;opacity:0} }
 
-          @keyframes scanHorizontal {
-            0% { left: -10px; opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { left: 100%; opacity: 0; }
-          }
+        .scanning-line-vertical {
+          position: absolute; top: 0; bottom: 0; width: 2px;
+          background: linear-gradient(to bottom, transparent 0%, rgba(192,38,211,0.9) 50%, transparent 100%);
+          box-shadow: 0 0 20px rgba(192,38,211,0.35);
+          animation: scanHorizontal 2s ease-in-out;
+          z-index: 11;
+        }
 
-          @keyframes scanVertical {
-            0% { top: -10px; opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { top: 100%; opacity: 0; }
-          }
-          .grid-background {
-            background-color: #b30a0aff;
-            background-image: 
-              linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-            background-size: 50px 50px;
-            background-attachment: fixed;
-          }
-          .scanning-line-vertical {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            width: 2px;
-            background: linear-gradient(
-              to bottom,
-              transparent 0%,
-              hsl(280, 100%, 70% / 0.8) 50%,
-              transparent 100%
-            );
-            box-shadow: 0 0 20px hsl(280, 100%, 70% / 0.6);
-            animation: scanHorizontal 2s ease-in-out;
-            z-index: 11;
-          }
+        .scanning-line-horizontal {
+          position: absolute; left: 0; right: 0; height: 2px;
+          background: linear-gradient(to right, transparent 0%, rgba(34,211,238,0.9) 50%, transparent 100%);
+          box-shadow: 0 0 20px rgba(34,211,238,0.35);
+          animation: scanVertical 2s ease-in-out 0.25s;
+          z-index: 11;
+        }
 
-          .scanning-line-horizontal {
-            position: absolute;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(
-              to right,
-              transparent 0%,
-              hsl(190, 100%, 60% / 0.8) 50%,
-              transparent 100%
-            );
-            box-shadow: 0 0 20px hsl(190, 100%, 60% / 0.6);
-            animation: scanVertical 2s ease-in-out 0.3s;
-            z-index: 11;
-          }
+        /* subtle gradient text glow */
+        .glow-text { background: linear-gradient(135deg, rgba(192,38,211,0.9), rgba(34,211,238,0.85)); -webkit-background-clip: text; background-clip: text; color: transparent; background-size: 200% 200%; animation: glowPulse 3s ease-in-out infinite; }
 
-          .content-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0 40px hsl(280, 100%, 70% / 0.3);
-          }
+        /* small responsive tweak for the moving border (keeps it crisp on mobile) */
+        @media (max-width: 640px) { .moving-border { transition: all 0.4s ease; } }
+      `}</style>
 
-          button:hover {
-            background: hsla(0, 0%, 100%, 1.00) !important;
-            transform: translateY(-1px);
-            box-shadow: 0 0 30px hsl(280, 100%, 70% / 0.4);
-          }
+      <div className="min-h-screen bg-slate-900 text-slate-100 p-6 flex flex-col items-center justify-center">
+        <div className="w-full max-w-6xl">
+          {/* Nav */}
+          <nav className="flex justify-center mb-8">
+            <div className="flex items-center gap-6 px-4 py-2 rounded-full border border-slate-600 bg-gradient-to-r from-slate-800/60 via-slate-900/40 to-slate-800/40 backdrop-blur-sm">
+              <a href="#home" className="text-sm font-medium hover:text-white">Home</a>
+              <a href="#projects" className="text-sm font-medium hover:text-white">Projects</a>
+              <a href="#contact" className="text-sm font-medium hover:text-white">Contact</a>
+            </div>
+          </nav>
 
-          /* Responsive Styles */
-          @media (max-width: 768px) {
-            .nav-bar > div {
-              width: 60%;
-              gap: 0.2rem;
-              padding: 0.5rem;
-            }
-              .card > img {
-              width: 300px !important;
-            }
-            .contentxg > a{
-              display:none;
-            }
-            .content-container > div {
-              width: 90%;
-              flex-direction: column;
-              alignItems: center;
-            }
+          {/* Main profile card + moving border container */}
+          <div ref={containerRef} className="relative flex flex-col gap-6" aria-live="polite">
+            <div ref={borderRef} className="moving-border absolute pointer-events-none border border-slate-200 shadow-[0_0_40px_rgba(192,38,211,0.15)] rounded-lg overflow-hidden transition-[top_left_width_height] duration-700 ease-[cubic-bezier(0.4,0,0.2,1)]" />
 
-            .content-container > div > div:first-child {
-              flex-direction: column;
-              alignItems: center;
-              text-align: center;
-            }
-
-            .content-container > div > div:last-child {
-              margin-top: 1rem;
-            }
-
-            .skills-grid {
-              grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-              gap: 0.5rem;
-            }
-
-            .projects-grid {
-              flex-direction: column;
-              gap: 1rem;
-            }
-              .depin{
-                background-color:"red"
-              }
-
-            .contact-section > div {
-              display: flex;
-              flex-direction: column;
-              align-items: center;
-              flex-wrap: wrap;
-            }
-
-            .contact-section > div > div:last-child {
-              width: 100%;
-              max-width: 400px;
-            }
-          }
-
-          @media (max-width: 480px) {
-            .card {
-              display: flex;
-              flex-direction: column;
-              align-items: center;
-              justify-content: center;
-            }
-            .nav-bar> div {
-              gap: 0.2rem;
-              padding: 0.5rem;
-              fontSize: '0.4rem',
-            }
-            .card > img {
-              width: 400px !important;
-            }
-            .title {
-              font-size: 1.2rem !important;
-            }
-
-            .info-text {
-              font-size: 0.8rem !important;
-            }
-
-            .skills-grid > span {
-              height: 25px;
-              padding-inline: 0.3rem;
-            }
-
-            .skills-grid > span > img {
-              width: 16px;
-            }
-
-            .skills-grid > span > p {
-              font-size: 0.8rem;
-            }
-          }
-        `}
-      </style>
-      <span className="nav-bar" style={styles.navBar}>
-        <div style={{
-          marginTop: 'clamp(2rem, 10vw, 8rem)',
-          marginBottom: '1rem',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '1rem',
-          width: 'clamp(300px, 50%, 400px)',
-          border: '1px solid gray',
-          borderRadius: '40px',
-          padding: '0.4rem',
-          color: 'white',
-          backgroundColor: "oklch(39.8% 0.195 277.366)"
-        }}>
-          <span style={{ cursor: 'pointer' }}><a href="#home">Home</a></span>
-          <span><a href="#projects">Projects</a></span>
-          <span><a href="#contact">Contact</a></span>
-        </div>
-      </span>
-      <div id="home" style={styles.container} className="grid-background">
-        <div style={styles.wrapper}>
-          <div ref={containerRef} style={styles.contentContainer} className="content-container">
-            <div ref={borderRef} style={styles.movingBorder} />
-            <div style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              width: 'min(90%, 800px)',
-              margin: '0 auto',
-              border: '1px solid white',
-              padding: 'clamp(10px, 3vw, 20px)',
-              borderRadius: '10px',
-              flexDirection: 'column' as const,
-              gap: '1.5rem',
-            }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap' as const }}>
-                <div style={{ display: 'flex', justifyContent: 'center',alignItems:'center', gap: '1rem', flexWrap: 'wrap' as const }}>
-                  <div style={styles.card} className="card">
-                    <img
-                      className="content-item"
-                      style={{ width: '70%', height: 'auto', borderRadius: '5px' }}
-                      src={'../assets/profile.png'}
-                      alt="Profile"
-                    />
-                  </div>
-                  <div style={{ display: 'flex', flexDirection: 'column' as const, alignItems: 'start', gap: '0.2rem', lineHeight: '1.2' }}>
-                    <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                      <h1 className="content-item" style={{ margin: 0, fontSize: 'clamp(1.5rem, 5vw, 2.5rem)', fontFamily: "'Poppins', sans-serif", padding: '0.5rem' }}>
-                        Ashwani
-                      </h1>
-                      <p style={{ margin: 0, fontSize: 'clamp(0.7rem, 2vw, 0.9rem)', color: 'lightgreen' }}>
-                        Available
-                      </p>
-                    </div>
-                    <p className="content-item" style={{ margin: 0, fontSize: 'clamp(0.8rem, 2.5vw, 1rem)', padding: '0.5rem' }}>
-                      Software Engineer
-                    </p>
-                    <div className="content-item" style={{ display: 'flex', gap: '0.3rem', alignItems: 'center' }}>
-                      <img style={{ width: '18px', height: '18px' }} src="https://img.icons8.com/color/48/000000/gmail.png" alt="email icon" />
-                      <p style={{ margin: 0, fontSize: 'clamp(0.8rem, 2.5vw, 1rem)' }}>
-                        ashwanisingh3846@gmail.com
-                      </p>
-                    </div>
-                  </div>
+            <section className="mx-auto w-[min(90%,800px)] bg-slate-800/40 border border-slate-600 p-6 rounded-2xl flex flex-col gap-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              {/* Left: profile image + meta */}
+              <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 w-full">
+                <div className="flex-shrink-0 rounded-xl overflow-hidden bg-gradient-to-br from-slate-700 to-slate-800 flex items-center justify-center mt-4">
+                  {/* image scales responsively */}
+                  <img
+                    className="content-item  sm:w-32 md:w-40  object-cover rounded-md "
+                    src={'../assets/profile.png'}
+                    alt="Profile"
+                  />
                 </div>
-                <div className="contentxg" style={{ display: 'flex', gap: '0.8rem', width: '80px', height: '30px', padding: '0.3rem', alignItems: 'center', justifyContent: 'center' }}>
-                  <a href="https://x.com/243ashwani"><XIcon /></a>
-                  <a href="https://github.com/ashwani1122"><GitHubIcon /></a>
+
+                <div className="flex-1 flex flex-col text-left">
+                  <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                    <h1 className="content-item text-2xl sm:text-3xl md:text-4xl font-bold leading-tight glow-text">
+                      Ashwani
+                    </h1>
+                    <span className="text-xs sm:text-sm text-emerald-400 font-medium">Available</span>
+                  </div>
+
+                  <p className="content-item mt-1 text-sm sm:text-base text-slate-300">Software Engineer</p>
+
+                  <div className="content-item mt-3 flex items-center gap-2 text-sm text-slate-300 break-words">
+                    <img className="w-5 h-5" src="https://img.icons8.com/color/48/000000/gmail.png" alt="email" />
+                    <span className="select-all text-sm">ashwanisingh3846@gmail.com</span>
+                  </div>
                 </div>
               </div>
-              <p className="content-item" style={{ marginTop: '1rem', fontSize: 'clamp(0.9rem, 3vw, 1.2rem)', textAlign: 'center', color: 'lightgray', fontFamily: 'sans-serif', padding: '0.5rem' }}>
-                Engineering end-to-end solutions with clean code and clear vision.
-              </p>
-            </div>
-          </div>
-          <div style={{ width: 'min(90%, 800px)', margin: '0 auto', padding: '1rem' }}>
-            <div>
-              <h1 style={{ fontFamily: 'sans-serif', fontSize: 'clamp(1.5rem, 5vw, 2rem)', marginTop: '4rem' }}>
-                About Me
-              </h1>
-              <p style={{ fontSize: 'clamp(0.9rem, 3vw, 1.2rem)', lineHeight: '1.5', fontFamily: 'sans-serif' }}>
-                Hey, I'm Ashwani, a Computer Science undergrad and full-stack developer who thrives on building and shipping solutions that truly matter.I could be an excellent fit if you seek a developer whose passion is inseparable from their craft. My approach is defined by deep product ownership—I don't just deliver to specification; I relentlessly refine, constantly seeking out opportunities to elevate the quality and user experience. If you’re looking for a developer who builds with heart, technical excellence, and an unwavering commitment to the final outcome, let’s talk.</p>
-              <p style={{ fontSize: 'clamp(0.9rem, 3vw, 1.2rem)', lineHeight: '1.5', fontFamily: 'sans-serif' }}>
-                If you've got an idea or want to collaborate on an exciting project, feel free to drop me a DM.
-              </p>
-            </div>
-            <div style={{ marginTop: '4rem' }}>
-              <h1 style={{ fontSize: 'clamp(1.5rem, 5vw, 2rem)' }}>Skills</h1>
-              <div className="skills-grid" style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
-                gap: '1rem',
-                marginTop: '1rem',
-              }}>
-                {[
-                  { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg', name: 'React.js' },
-                  { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg', name: 'Next.js' },
-                  { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg', name: 'Node.js' },
-                  { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg', name: 'TypeScript' },
-                  { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg', name: 'CSS3' },
-                  { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg', name: 'HTML5' },
-                  { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg', name: 'Git' },
-                  { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg', name: 'GitHub' },
-                  { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg', name: 'JavaScript' },
-                  { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg', name: 'Express.js' },
-                  { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg', name: 'MongoDB' },
-                  { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg', name: 'MySQL' },
-                  { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg', name: 'PostgreSQL' },
-                  { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redis/redis-original.svg', name: 'Redis' },
-                  { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/heroku/heroku-original.svg', name: 'Heroku' },
-                  { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/firebase/firebase-original.svg', name: 'Firebase' },
-                  { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/prisma/prisma-original.svg', name: 'Prisma' },
-                  { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg', name: 'Tailwind' },
-                  { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg', name: 'Docker' },
-                  { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bun/bun-original.svg', name: 'Bun' },
-                ].map(skill => (
-                  <span key={skill.name} style={{
-                    display: 'flex',
-                    gap: '0.3rem',
-                    alignItems: 'center',
-                    fontFamily: 'sans-serif',
-                    border: '1px solid white',
-                    height: '30px',
-                    paddingInline: '0.5rem',
-                    borderRadius: '10px',
-                  }}>
-                    <img src={skill.icon} width="20" alt={`${skill.name} icon`} />
-                    <p>{skill.name}</p>
-                  </span>
-                ))}
-              </div>
-            </div>
-            <div id="projects" style={{ marginTop: '10rem', gap: "1rem" }}>
-              <h1 style={{ fontSize: 'clamp(1.5rem, 5vw, 2rem)' }}>Projects</h1>
-              <div className="projects-grid" style={{display:"flex" ,gap:"1rem",flexWrap:"wrap",justifyContent:"center",flex:"1 1 clamp(250px, 45%, 400px)"}}>
-                <div className='depin' style={{ border: '1px solid white', borderRadius: '10px', padding: '5px', flex: '1 1 clamp(250px, 45%, 400px)' }}>
-                 
-                  <img style={{ borderRadius: '10px', width: '100%', height: 'auto' }} src="../assets/Depin.png" alt="Depin" />
-                  <a href="https://github.com/ashwani1122/depin" target="_blank">
-                  <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexDirection: "row" ,backgroundColor:'#0f172a',padding: '1rem',borderRadius: '10px',width: 'min(100%, 500px)',marginTop:'1rem'}}>
-                     Github
-                  </div>
-                  </a>
-                </div>
-                <div style={{ border: '1px solid white', borderRadius: '10px', padding: '5px', flex: '1 1 clamp(250px, 45%, 400px)' }}>
-                  <a href="https://order-food-tz78.onrender.com/" target="_blank">
-                  <img style={{ borderRadius: '10px', width: '100%', height: 'auto' }} src="../assets/delfood.png" alt="Delfood" />
-                  </a>
-                  <a href="https://github.com/ashwani1122/Food-order/tree/main" target="_blank">
-                  <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexDirection: "row" ,backgroundColor:'#0f172a',padding: '1rem',borderRadius: '10px',width: 'min(100%, 500px)'}}>
-                    Github
-                  </div>
-                  </a>
-                </div>
-                <div style={{display:"flex" ,gap:"1rem",flexWrap:"wrap",justifyContent:"center",flex:"1 1 clamp(250px, 45%, 400px)"}}>
-                <div style={{ border: '1px solid white', borderRadius: '10px', padding: '5px',display:'flex',flexDirection:'column',gap:'1rem'}}>
-                  <a href="https://pay-online-lijb.vercel.app/" target="_blank">
-                  <img style={{ borderRadius: '10px', width: '100%', height: 'auto' }} src="../assets/paytm.png" alt="Paytm" />
-                  
-                  </a>
-                   <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' ,backgroundColor:'#0f172a',padding: '1rem',borderRadius: '10px'}}>
-                    <a href="https://github.com/ashwani1122/payOnline" target="_blank">Github</a>
-                  </div>
-                </div>
-                <a href="https://predstock.vercel.app/" target="_blank">
-                <div style={{ border: '1px solid white', borderRadius: '10px', padding: '5px',display:'flex',flexDirection:'column',gap:'1rem'}}>
-                  <img style={{ borderRadius: '10px', width: '100%', height: 'auto' }} src="../assets/predstock.png" alt="Paytm" />
-                  
-                  <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexDirection: "row" ,backgroundColor:'#0f172a',padding: '1rem',borderRadius: '10px'}}>
-                    <a href="https://github.com/ashwani1122/stock-pred" target="_blank">Github</a>
-                  </div>
-                </div>
+
+              {/* Right: social icons (stacked on small screens, inline on >=sm) */}
+              <div className="flex w-full items-center justify-between sm:w-auto  gap-2 sm:gap-3 mt-2 sm:mt-0">
+                {/* show as small pill buttons; they will wrap under on small screens */}
+                <a
+                  href="https://x.com/243ashwani"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg border border-slate-600 hover:bg-slate-700/40 text-sm"
+                >
+                  <XIcon />
                 </a>
+
+                <a
+                  href="https://github.com/ashwani1122"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg border border-slate-600 hover:bg-slate-700/40 text-sm"
+                >
+                  <GitHubIcon />
+                  <span className="hidden sm:inline">GitHub</span>
+                </a>
+
+              </div>
+            </div>
+
+            <p className="content-item text-center text-slate-300">
+              Engineering end-to-end solutions with clean code and clear vision.
+            </p>
+          </section>
+
+
+            {/* About + Skills */}
+            <section className="mx-auto w-[min(90%,800px)] mt-8">
+              <h2 className="text-2xl md:text-3xl font-semibold mb-4">About Me</h2>
+              <p className="text-slate-300 leading-relaxed text-justify hyphens-auto">Hey, I'm Ashwani, a Computer Science undergrad and full-stack developer who thrives on building and shipping solutions that truly matter. I could be an excellent fit if you seek a developer whose passion is inseparable from their craft. My approach is defined by deep product ownership—I don't just deliver to specification; I relentlessly refine, constantly seeking out opportunities to elevate the quality and user experience. If you’re looking for a developer who builds with heart, technical excellence, and an unwavering commitment to the final outcome, let’s talk.</p>
+
+              <p className="text-slate-300 mt-4">If you've got an idea or want to collaborate on an exciting project, feel free to drop me a DM.</p>
+
+              <div className="mt-8">
+                <h3 className="text-xl font-medium mb-3">Skills</h3>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                  {[
+                    { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg', name: 'React.js' },
+                    { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg', name: 'Next.js' },
+                    { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg', name: 'Node.js' },
+                    { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg', name: 'TypeScript' },
+                    { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg', name: 'CSS3' },
+                    { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg', name: 'HTML5' },
+                    { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg', name: 'Git' },
+                    { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg', name: 'GitHub' },
+                    { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg', name: 'JavaScript' },
+                    { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg', name: 'Express.js' },
+                    { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg', name: 'MongoDB' },
+                    { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg', name: 'MySQL' },
+                    { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg', name: 'PostgreSQL' },
+                    { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redis/redis-original.svg', name: 'Redis' },
+                    { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/heroku/heroku-original.svg', name: 'Heroku' },
+                    { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/firebase/firebase-original.svg', name: 'Firebase' },
+                    { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/prisma/prisma-original.svg', name: 'Prisma' },
+                    { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg', name: 'Tailwind' },
+                    { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg', name: 'Docker' },
+                    { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bun/bun-original.svg', name: 'Bun' },
+                  ].map((skill) => (
+                    <div key={skill.name} className="flex items-center gap-2 rounded-lg border border-slate-600 px-3 py-2 bg-slate-800/30">
+                      <img src={skill.icon} alt={`${skill.name} icon`} className="w-5 h-5" />
+                      <span className="text-sm">{skill.name}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
+
+            {/* Projects */}
+            <section id="projects" className="mx-auto w-[min(90%,800px)] mt-12">
+              <h2 className="text-2xl md:text-3xl font-semibold mb-6">Projects</h2>
+
+              <div className="flex flex-wrap gap-6 justify-center ">
+                <article className="w-full  bg-slate-800/40 border border-slate-600 rounded-xl overflow-hidden">
+                  <a href="https://nexo12.vercel.app/" target="_blank" rel="noreferrer">
+                    <img src="../assets/nexo.png" alt="Nexo" className="w-full  object-cover" />
+                  </a>
+                  <div className="p-4 flex justify-center">
+                    <a href="https://github.com/ashwani1122/second-life-marketplace" target="_blank" rel="noreferrer" className="w-full text-center py-2 rounded-lg bg-slate-900/60 hover:bg-slate-700">Github</a>
+                  </div>
+                </article>
+                 <article className="w-full  bg-slate-800/40 border border-slate-600 rounded-xl overflow-hidden">
+                  <a href="https://order-food-tz78.onrender.com/" target="_blank" rel="noreferrer">
+                    <img src="../assets/delfood.png" alt="Delfood" className="w-full  object-cover" />
+                  </a>
+                  <div className="p-4 flex justify-center">
+                    <a href="https://github.com/ashwani1122/Food-order/tree/main" target="_blank" rel="noreferrer" className="w-full text-center py-2 rounded-lg bg-slate-900/60 hover:bg-slate-700">Github</a>
+                  </div>
+                </article>
+                <article className="w-full  bg-slate-800/40 border border-slate-600 rounded-xl overflow-hidden">
+                  <img src="../assets/Depin.png" alt="Depin" className="w-full object-cover" />
+                  <div className="p-4 flex justify-center">
+                    <a href="https://github.com/ashwani1122/depin" target="_blank" rel="noreferrer" className="w-full text-center py-2 rounded-lg bg-slate-900/60 hover:bg-slate-700">Github</a>
+                  </div>
+                </article>
+
+               
+
+                <article className="w-full  bg-slate-800/40 border border-slate-600 rounded-xl overflow-hidden">
+                  <a href="https://pay-online-lijb.vercel.app/" target="_blank" rel="noreferrer">
+                    <img src="../assets/paytm.png" alt="Paytm" className="w-full  object-cover" />
+                  </a>
+                  <div className="p-4 flex justify-center">
+                    <a href="https://github.com/ashwani1122/payOnline" target="_blank" rel="noreferrer" className="w-full text-center py-2 rounded-lg bg-slate-900/60 hover:bg-slate-700">Github</a>
+                  </div>
+                </article>
+
+                <article className="w-full  bg-slate-800/40 border border-slate-600 rounded-xl overflow-hidden">
+                  <a href="https://predstock.vercel.app/" target="_blank" rel="noreferrer">
+                    <img src="../assets/predstock.png" alt="PredStock" className="w-full  object-cover" />
+                  </a>
+                  <div className="p-4 flex justify-center">
+                    <a href="https://github.com/ashwani1122/stock-pred" target="_blank" rel="noreferrer" className="w-full text-center py-2 rounded-lg bg-slate-900/60 hover:bg-slate-700">Github</a>
+                  </div>
+                </article>
+
                 
               </div>
-              </div>
-            </div>
-            <div id="contact" className="contact-section" style={{
-              marginTop: '10rem',
-              alignItems: 'center',
-              display: 'flex',
-              flexDirection: 'column' as const,
-              gap: '1rem',
-              fontFamily: 'sans-serif',
-            }}>
-              <h1 style={{ marginTop: '1rem', fontSize: 'clamp(1.5rem, 5vw, 2rem)' }}>Get in touch</h1>
-              <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexDirection: "row" }}>
-                <div><ContactForm /></div>
-                <div style={{
-                  backgroundColor: '#0f172a',
-                  padding: '1rem',
-                  gap: '1rem',
-                  display: 'flex',
-                  flexDirection: 'column' as const,
-                  borderRadius: '10px',
-                  width: 'min(100%, 500px)',
-                }}>
-                  <h1 style={{ width: '100%', fontSize: 'clamp(1.2rem, 4vw, 1.5rem)' }}>Connect with me</h1>
+            </section>
+
+            {/* Contact */}
+            <section id="contact" className="mx-auto w-[min(90%,800px)] mt-12 flex flex-col items-center gap-6">
+              <h2 className="text-2xl md:text-3xl font-semibold">Get in touch</h2>
+
+              <div className="w-full flex flex-col md:flex-row gap-6 md:items-start md:justify-center">
+                <div className="flex-1 bg-transparent">
+                  <ContactForm />
+                </div>
+
+                <aside className="w-full md:w-80 bg-slate-800/40 border border-slate-600 rounded-xl p-4 flex flex-col gap-3">
+                  <h3 className="text-lg font-medium">Connect with me</h3>
+
                   {[
                     { href: 'https://github.com/ashwani1122', icon: <GitHubIcon />, text: 'GitHub' },
                     { href: 'https://x.com/243ashwani', icon: <XIcon />, text: 'Twitter' },
                     { href: 'https://www.linkedin.com/in/ashwani-singh-308081303/', icon: <LinkedInIcon />, text: 'LinkedIn' },
                     { href: 'https://www.instagram.com/ashwani123950', icon: <InstagramIcon />, text: 'Instagram' },
                   ].map(link => (
-                    <a key={link.text} href={link.href} target="_blank" rel="noopener noreferrer">
-                      <div style={{ display: 'flex', gap: '1rem', border: '1px solid white', padding: '0.5rem', borderRadius: '10px' }}>
-                        {link.icon}
-                        {link.text}
-                      </div>
+                    <a key={link.text} href={link.href} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-2 rounded-md border border-slate-600 hover:bg-slate-700/40">
+                      {link.icon}
+                      <span>{link.text}</span>
                     </a>
                   ))}
-                </div>
+                </aside>
               </div>
-              <div style={{
-                backgroundColor: '#0f172a',
-                padding: '2rem',
-                gap: '1rem',
-                display: 'flex',
-                flexDirection: 'column' as const,
-                borderRadius: '10px',
-                marginTop: '10rem',
-              }}>
-                <h1 style={{ fontSize: 'clamp(1.2rem, 4vw, 1.5rem)', }}>Let's build together</h1>
-                <p style={{ fontSize: 'clamp(0.8rem, 2.5vw, 1rem)' }}>
-                  I'm always interested in discussing new opportunities, innovative projects, and potential collaborations in the full stack development space. If you're interested in working together, feel free to reach out to me.
-                </p>
-                <ul style={{ fontSize: 'clamp(0.8rem, 2.5vw, 1rem)' }}>
+
+              <div className="w-full bg-slate-800/40 border border-slate-600 rounded-xl p-6 mt-8">
+                <h3 className="text-xl font-medium">Let's build together</h3>
+                <p className="mt-2 text-slate-300">I'm always interested in discussing new opportunities, innovative projects, and potential collaborations in the full stack development space. If you're interested in working together, feel free to reach out to me.</p>
+
+                <ul className="mt-4 list-disc list-inside text-slate-300">
                   <li>Frontend Development</li>
                   <li>Backend Development</li>
                   <li>Full Stack Development</li>
                   <li>Technical Consulting</li>
                 </ul>
               </div>
-            </div>
-          </div>
-          <hr style={{ width: '100%', marginTop: "14rem" }} />
-          <div style={{
-            display: 'flex',
-            gap: '1rem',
-            justifyContent: 'space-evenly',
-            marginTop: '1rem',
-            padding: '1rem',
-            fontSize: 'clamp(0.7rem, 2vw, 0.9rem)',
-            flexWrap: 'wrap' as const,
-          }}>
-            <p>© 2025 Ashwani Singh. All rights reserved.</p>
-            <div style={{ display: 'flex', justifyContent: 'space-between', gap: '1rem' }}>
-              <p>Privacy Policy</p>
-              <p>Terms of Service</p>
-            </div>
+            </section>
+
+            {/* Footer */}
+            <footer className="w-full mt-12 border-t border-slate-700 pt-6 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-slate-400">
+              <p>© 2025 Ashwani Singh. All rights reserved.</p>
+              <div className="flex gap-4">
+                <span className="hover:text-white cursor-pointer">Privacy Policy</span>
+                <span className="hover:text-white cursor-pointer">Terms of Service</span>
+              </div>
+            </footer>
           </div>
         </div>
       </div>
