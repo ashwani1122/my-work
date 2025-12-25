@@ -370,7 +370,7 @@ const MovingBorderComplete: React.FC = () => {
   />
 
   <h3 className="text-2xl font-semibold text-slate-100">
-    Let’s build together 🚀
+    Let’s build together
   </h3>
 
   <p className="mt-3 text-slate-300 leading-relaxed">
