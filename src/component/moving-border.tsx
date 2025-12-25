@@ -249,18 +249,6 @@ const MovingBorderComplete: React.FC = () => {
                     <a href="https://github.com/ashwani1122/depin" target="_blank" rel="noreferrer" className="w-full text-center py-2 rounded-lg bg-slate-900/60 hover:bg-slate-700">Github</a>
                   </div>
                 </article>
-
-               
-
-                <article className="w-full  bg-slate-800/40 border border-slate-600 rounded-xl overflow-hidden">
-                  <a href="https://pay-online-lijb.vercel.app/" target="_blank" rel="noreferrer">
-                    <img src="../assets/paytm.png" alt="Paytm" className="w-full  object-cover" />
-                  </a>
-                  <div className="p-4 flex justify-center">
-                    <a href="https://github.com/ashwani1122/payOnline" target="_blank" rel="noreferrer" className="w-full text-center py-2 rounded-lg bg-slate-900/60 hover:bg-slate-700">Github</a>
-                  </div>
-                </article>
-
                 <article className="w-full  bg-slate-800/40 border border-slate-600 rounded-xl overflow-hidden">
                   <a href="https://predstock.vercel.app/" target="_blank" rel="noreferrer">
                     <img src="../assets/predstock.png" alt="PredStock" className="w-full  object-cover" />
