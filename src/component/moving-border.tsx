@@ -228,6 +228,14 @@ const MovingBorderComplete: React.FC = () => {
 
               <div className="flex flex-wrap gap-6 justify-center ">
                 <article className="w-full  bg-slate-800/40 border border-slate-600 rounded-xl overflow-hidden">
+                  <a href="https://safedep2.vercel.app/" target="_blank" rel="noreferrer">
+                    <img src="../assets/safedep.png" alt="SafeDep" className="w-full  object-cover" />
+                  </a>
+                  <div className="p-4 flex justify-center">
+                    <a href="https://github.com/ashwani1122/safedep2" target="_blank" rel="noreferrer" className="w-full text-center py-2 rounded-lg bg-slate-900/60 hover:bg-slate-700">Github</a>
+                  </div>
+                </article>
+                <article className="w-full  bg-slate-800/40 border border-slate-600 rounded-xl overflow-hidden">
                   <a href="https://nexo12.vercel.app/" target="_blank" rel="noreferrer">
                     <img src="../assets/nexo.png" alt="Nexo" className="w-full  object-cover" />
                   </a>
