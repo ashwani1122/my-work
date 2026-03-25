@@ -128,8 +128,8 @@ const MovingBorderComplete: React.FC = () => {
                 <a href="#home" className="text-sm font-medium text-slate-400 hover:text-white transition-colors">Home</a>
                 <a href="#projects" className="text-sm font-medium text-slate-400 hover:text-white transition-colors">Projects</a>
                 <a href="#contact" className="text-sm font-medium text-slate-400 hover:text-white transition-colors">Contact</a>
-                <a className="text-sm font-medium text-slate-400 hover:text-white transition-colors" href="/resume.pdf" target="_blank">View Resume</a>
-                <a className='text-sm font-medium text-slate-400 hover:text-white transition-colors' href="/resume.pdf" download>Download Resume</a>              </div>
+                <a className="text-sm font-medium text-slate-400 hover:text-white transition-colors" href="/resume.pdf" target="_blank">Resume</a>
+                <a className='text-sm font-medium text-slate-400 hover:text-white transition-colors' href="/resume.pdf" download>Download</a>              </div>
             </nav>
 
             {/* Main profile card + moving border container */}
