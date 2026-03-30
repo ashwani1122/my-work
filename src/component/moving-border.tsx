@@ -243,11 +243,12 @@ const MovingBorderComplete: React.FC = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {[
-                    { img: '../assets/flowforge.png', title: 'flowforge', link: 'https://workflow-automation-black.vercel.app', github: 'https://github.com/ashwani1122/workflow-automation' },
+                    
+                    { img: '../assets/sub-agent.png', title: 'claud-sub-agent', link: 'https://claude-sub-agent.vercel.app', github: 'https://github.com/ashwani1122/claude-sub-agent' },
+                    { img: '../assets/flowforge.png', title: 'workflow automation tool', link: 'https://workflow-automation-black.vercel.app', github: 'https://github.com/ashwani1122/workflow-automation' },
                     { img: '../assets/nexo.png', title: 'Nexo', link: 'https://nexo12.vercel.app/', github: 'https://github.com/ashwani1122/second-life-marketplace' },
                     { img: '../assets/delfood.png', title: 'Delfood', link: 'https://order-food-tz78.onrender.com/', github: 'https://github.com/ashwani1122/Food-order/tree/main' },
                     { img: '../assets/safedep.png', title: 'SafeDep', link: 'https://safedep2.vercel.app/', github: 'https://github.com/ashwani1122/safedep2' },
-                    { img: '../assets/Depin.png', title: 'Depin', link: '', github: 'https://github.com/ashwani1122/depin' },
                     { img: '../assets/predstock.png', title: 'PredStock', link: 'https://predstock.vercel.app/', github: 'https://github.com/ashwani1122/stock-pred' }
                   ].map((project, idx) => (
                     <article key={idx} className="group relative bg-slate-900/50 border border-slate-800 rounded-xl overflow-hidden hover:border-slate-600 transition-colors">
