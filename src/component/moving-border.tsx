@@ -385,7 +385,7 @@ const MovingBorderComplete: React.FC = () => {
         "Frontend Development",
         "Backend Development",
         "Full Stack Development",
-        "Technical Consulting",
+        "Applied Ai",
       ].map((item) => (
         <li 
           key={item}
