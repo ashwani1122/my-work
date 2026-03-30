@@ -4,6 +4,7 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import ContactForm from './contactForm';
 import XIcon from '@mui/icons-material/X';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import { Contributions } from './contribution';
 
 interface BorderPosition {
   top: number;
@@ -104,22 +105,6 @@ const MovingBorderComplete: React.FC = () => {
       {/* Main Wrapper */}
       <div className="min-h-screen w-full bg-slate-950 text-slate-100 relative selection:bg-fuchsia-500/30">
         
-        {/* --- FIXED BACKGROUND LAYER START --- */}
-        {/* Changed from 'absolute' to 'fixed' and added 'z-0' */}
-        <div className="fixed inset-0 z-0 pointer-events-none">
-            {/* 1. The Grid Pattern */}
-            <div className="absolute inset-0 h-full w-full bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
-            
-            {/* 2. The Glow Orb (Top Center) */}
-            <div className="absolute left-0 right-0 top-[-10%] m-auto h-[500px] w-[500px] rounded-full bg-fuchsia-500/20 blur-[100px]"></div>
-            
-            {/* 3. The Radial Mask (Vignette) */}
-            <div className="absolute inset-0 bg-slate-950 [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,transparent_70%,black)]"></div>
-        </div>
-        {/* --- FIXED BACKGROUND LAYER END --- */}
-
-        {/* --- SCROLLABLE CONTENT START --- */}
-        {/* Added 'relative z-10' to ensure content scrolls OVER the fixed background */}
         <div className="relative z-10 w-full flex flex-col items-center justify-center p-6">
           <div className="w-full max-w-6xl">
             {/* Nav */}
@@ -156,7 +141,7 @@ const MovingBorderComplete: React.FC = () => {
                       <span className="inline-flex items-center rounded-full bg-emerald-400/10 px-2 py-1 text-xs font-medium text-emerald-400 ring-1 ring-inset ring-emerald-400/20">Available</span>
                     </div>
 
-                    <p className="content-item mt-1 text-sm sm:text-base text-slate-400">Software Engineer</p>
+                    <p className="content-item mt-1 text-sm sm:text-base text-slate-400">Software/ Ai Engineer</p>
 
                     <div className="content-item mt-3 flex items-center gap-2 text-sm text-slate-400 break-words">
                       <img className="w-5 h-5 opacity-80" src="https://img.icons8.com/color/48/000000/gmail.png" alt="email" />
@@ -197,10 +182,11 @@ const MovingBorderComplete: React.FC = () => {
 
               {/* About + Skills */}
               <section className="mx-auto w-[min(90%,800px)] mt-8">
-                <h2 className="text-2xl md:text-3xl font-semibold mb-4 text-slate-100">About Me</h2>
-                <div className="text-slate-400 leading-relaxed text-justify hyphens-auto space-y-4">
-                  <p>Hey, I'm Ashwani, a Computer Science undergrad and full-stack developer who thrives on building and shipping solutions that truly matter. I could be an excellent fit if you seek a developer whose passion is inseparable from their craft.</p>
-                  <p>My approach is defined by deep product ownership—I don't just deliver to specification; I relentlessly refine, constantly seeking out opportunities to elevate the quality and user experience. If you’re looking for a developer who builds with heart, technical excellence, and an unwavering commitment to the final outcome, let’s talk.</p>
+                <h2 className="text-2xl md:text-3xl font-semibold mb-4 text-slate-100 flex-start">About</h2>
+                <div className="text-slate-400 leading-relaxed text-justify hyphens-auto w-full">
+                    <p>
+                      tldr; self-taught by breaking things and building them back on the internet. I’m deeply interested in technology that makes a real difference, not just noise. I write code consistently, think in systems, and prefer learning through action. I’ve also spent time experimenting with content and growth, which shaped how I approach building and shipping. Right now, my focus is simple—build fast, learn faster, and create things that matter. If you’re curious to know more, feel free to connect.
+                    </p>
                 </div>
 
                 <div className="mt-8">
@@ -244,7 +230,7 @@ const MovingBorderComplete: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {[
                     
-                    { img: '../assets/sub-agent.png', title: 'claud-sub-agent', link: 'https://claude-sub-agent.vercel.app', github: 'https://github.com/ashwani1122/claude-sub-agent' },
+                    { img: '../assets/sub-agent.png', title: 'claude-sub-agent', link: 'https://claude-sub-agent.vercel.app', github: 'https://github.com/ashwani1122/claude-sub-agent' },
                     { img: '../assets/flowforge.png', title: 'workflow automation tool', link: 'https://workflow-automation-black.vercel.app', github: 'https://github.com/ashwani1122/workflow-automation' },
                     { img: '../assets/nexo.png', title: 'Nexo', link: 'https://nexo12.vercel.app/', github: 'https://github.com/ashwani1122/second-life-marketplace' },
                     { img: '../assets/delfood.png', title: 'Delfood', link: 'https://order-food-tz78.onrender.com/', github: 'https://github.com/ashwani1122/Food-order/tree/main' },
@@ -277,7 +263,9 @@ const MovingBorderComplete: React.FC = () => {
                   ))}
                 </div>
               </section>
-
+             <div>
+              <Contributions/>
+             </div>
               {/* Contact */}
               <section id="contact" className="mx-auto w-[min(90%,800px)] mt-12 mb-12 flex flex-col items-center gap-6">
                 <h2 className="text-2xl md:text-3xl font-semibold text-slate-100">Get in touch</h2>
