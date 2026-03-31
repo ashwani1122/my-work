@@ -267,12 +267,11 @@ const MovingBorderComplete: React.FC = () => {
               <Contributions/>
              </div>
               {/* Contact */}
+              <div>
+              </div>
               <section id="contact" className="mx-auto w-[min(90%,800px)] mt-12 mb-12 flex flex-col items-center gap-6">
                 <h2 className="text-2xl md:text-3xl font-semibold text-slate-100">Get in touch</h2>
-
                   <div className="w-full flex flex-col md:flex-row gap-8 md:items-start md:justify-center">
-
-          {/* Contact Form Section */}
           <div className="flex-1">
             <ContactForm />
           </div>
