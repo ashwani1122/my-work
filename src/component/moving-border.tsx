@@ -232,6 +232,7 @@ const MovingBorderComplete: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {[
                     
+                    { img: '../assets/memai.jpg', title: 'memai', link: 'https://github.com/ashwani1122/memeai', github: 'https://github.com/ashwani1122/memeai' },
                     { img: '../assets/sub-agent.png', title: 'claude-sub-agent', link: 'https://claude-sub-agent.vercel.app', github: 'https://github.com/ashwani1122/claude-sub-agent' },
                     { img: '../assets/flowforge.png', title: 'workflow automation tool', link: 'https://workflow-automation-black.vercel.app', github: 'https://github.com/ashwani1122/workflow-automation' },
                     { img: '../assets/nexo.png', title: 'Nexo', link: 'https://nexo12.vercel.app/', github: 'https://github.com/ashwani1122/second-life-marketplace' },
