@@ -213,6 +213,8 @@ const MovingBorderComplete: React.FC = () => {
                       { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg', name: 'Tailwind' },
                       { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg', name: 'Docker' },
                       { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bun/bun-original.svg', name: 'Bun' },
+                      { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/fastapi/fastapi-original.svg', name: 'fastapi' },
+                      { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg', name: 'python' },
                     ].map((skill) => (
                       <div key={skill.name} className="flex items-center gap-2 rounded-lg border border-slate-700/50 px-3 py-2 bg-slate-800/30 hover:bg-slate-800/50 transition-colors">
                         <img src={skill.icon} alt={`${skill.name} icon`} className="w-5 h-5" />
