@@ -17,11 +17,11 @@ export default function ContactForm(){
 
     emailjs
       .sendForm(
-        "service_0o6ab12",
-        "template_bb2o05d",
-        form.current,
-        "9qsVu4HewnM5xc0l1"
-      )
+        "service_lz2t0d8",
+        "template_rs1y17a",
+        form.current,{
+         publicKey:"nedFjalZ23r9TMb6Z"
+      })
       .then(
         () => {
           setLoading(false);
