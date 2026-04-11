@@ -260,6 +260,7 @@ const MovingBorderComplete: React.FC = () => {
                           <a href={project.github} target="_blank" rel="noreferrer" className="px-4 py-1.5 rounded-full text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white transition-colors">
                             Github
                           </a>
+                          {project.title ==="workflow automation tool" &&<a className='px-4 py-1.5 rounded-full text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white transition-colors' href="https://www.youtube.com/watch?v=8cAox1foGsQ" target='_blanck'>video</a>}
                         </div>
                       </div>
                     </article>
