@@ -238,7 +238,6 @@ const MovingBorderComplete: React.FC = () => {
                     { img: '../assets/nexo.png', title: 'Nexo', link: 'https://nexo12.vercel.app/', github: 'https://github.com/ashwani1122/second-life-marketplace' },
                     { img: '../assets/delfood.png', title: 'Delfood', link: 'https://order-food-tz78.onrender.com/', github: 'https://github.com/ashwani1122/Food-order/tree/main' },
                     { img: '../assets/safedep.png', title: 'SafeDep', link: 'https://safedep2.vercel.app/', github: 'https://github.com/ashwani1122/safedep2' },
-                    { img: '../assets/predstock.png', title: 'PredStock', link: 'https://predstock.vercel.app/', github: 'https://github.com/ashwani1122/stock-pred' }
                   ].map((project, idx) => (
                     <article key={idx} className="group relative bg-slate-900/50 border border-slate-800 rounded-xl overflow-hidden hover:border-slate-600 transition-colors">
                        {/* Hover Glow Effect */}
