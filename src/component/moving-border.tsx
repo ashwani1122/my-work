@@ -178,9 +178,6 @@ const MovingBorderComplete: React.FC = () => {
                 Engineering end-to-end solutions with clean code and clear vision.
               </p>
             </section>
-
-
-              {/* About + Skills */}
               <section className="mx-auto w-[min(90%,800px)] mt-8">
                 <h2 className="text-2xl md:text-3xl font-semibold mb-4 text-slate-100 flex-start">About</h2>
                 <div className="text-slate-400 leading-relaxed text-justify hyphens-auto w-full">
@@ -236,7 +233,7 @@ const MovingBorderComplete: React.FC = () => {
                     { img: '../assets/sub-agent.png', title: 'claude-sub-agent', link: 'https://claude-sub-agent.vercel.app', github: 'https://github.com/ashwani1122/claude-sub-agent' },
                     { img: '../assets/flowforge.png', title: 'workflow automation tool', link: 'https://workflow-automation-black.vercel.app', github: 'https://github.com/ashwani1122/workflow-automation' },
                     { img: '../assets/nexo.png', title: 'Nexo', link: 'https://nexo12.vercel.app/', github: 'https://github.com/ashwani1122/second-life-marketplace' },
-                    { img: '../assets/delfood.png', title: 'Delfood', link: 'https://order-food-tz78.onrender.com/', github: 'https://github.com/ashwani1122/Food-order/tree/main' },
+                    { img: '../assets/delfood.png', title: 'Delfood', link: 'https://frontendfooddel.vercel.app', github: 'https://github.com/ashwani1122/Food-order' },
                     { img: '../assets/safedep.png', title: 'SafeDep', link: 'https://safedep2.vercel.app/', github: 'https://github.com/ashwani1122/safedep2' },
                   ].map((project, idx) => (
                     <article key={idx} className="group relative bg-slate-900/50 border border-slate-800 rounded-xl overflow-hidden hover:border-slate-600 transition-colors">
