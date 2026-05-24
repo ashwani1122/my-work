@@ -104,9 +104,9 @@ export default function Portfolio() {
                 item === "Resume" ? (
                   <a
                     key={item}
-                    href="/resume.pdf"
+                    href="/Myresume.pdf"
                     target="_blank"
-                    rel="noopener noreferrer"
+                    // rel="noopener noreferrer"
                     className="text-sm text-slate-400 transition hover:text-white"
                   >
                     {item}
