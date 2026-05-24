@@ -227,11 +227,8 @@ export default function Portfolio() {
           <h2 className="text-4xl font-bold">About</h2>
 
           <p className="mt-8 max-w-4xl text-lg leading-relaxed text-slate-400">
-            Self-taught developer obsessed with building products that actually
-            matter. I enjoy designing scalable architectures, creating elegant
-            interfaces, and experimenting with AI systems. My focus is on
-            shipping fast, learning continuously, and building impactful
-            technology.
+           Self-taught developer driven by curiosity, execution, and the ambition to build technology that creates real impact. Passionate about architecting scalable systems, crafting refined user experiences, and exploring the intersection of software and AI. Focused on moving fast, thinking deeply, and turning ambitious ideas into production-ready products.
+
           </p>
         </motion.section>
 
