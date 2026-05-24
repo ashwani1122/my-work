@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import {
-  Mail,
   ExternalLink,
   Download,
   ArrowUpRight,
@@ -59,22 +58,6 @@ const projects = [
   },
 ];
 
-const experience = [
-  {
-    role: "Frontend Developer",
-    company: "Freelance",
-    duration: "2024 — Present",
-    description:
-      "Building modern full-stack applications, developer tools, and premium UI systems for startups and international clients.",
-  },
-  {
-    role: "Full Stack Engineer",
-    company: "Independent Projects",
-    duration: "2023 — Present",
-    description:
-      "Designed scalable systems with React, Node.js, PostgreSQL, Redis, Docker, and AI integrations.",
-  },
-];
 
 export default function Portfolio() {
   const cursorRef = useRef<HTMLDivElement | null>(null);
