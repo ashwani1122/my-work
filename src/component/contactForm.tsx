@@ -1,14 +1,29 @@
+"use client";
+
 import React, { useRef, useState } from "react";
 import emailjs from "@emailjs/browser";
+import {
+  Send,
+  Loader2,
+  CheckCircle2,
+  AlertCircle,
+} from "lucide-react";
 
-export default function ContactForm(){
+export default function ContactForm() {
   const form = useRef<HTMLFormElement | null>(null);
+
   const [loading, setLoading] = useState(false);
-  const [status, setStatus] = useState<null | "success" | "error">(null);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const [status, setStatus] = useState<
+    null | "success" | "error"
+  >(null);
+
+  const [errorMessage, setErrorMessage] =
+    useState<string | null>(null);
 
   const sendEmail = (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!form.current) return;
 
     setLoading(true);
@@ -19,9 +34,11 @@ export default function ContactForm(){
       .sendForm(
         "service_lz2t0d8",
         "template_rs1y17a",
-        form.current,{
-         publicKey:"nedFjalZ23r9TMb6Z"
-      })
+        form.current,
+        {
+          publicKey: "nedFjalZ23r9TMb6Z",
+        }
+      )
       .then(
         () => {
           setLoading(false);
@@ -31,7 +48,11 @@ export default function ContactForm(){
         (error) => {
           setLoading(false);
           setStatus("error");
-          setErrorMessage(error?.text ?? "Something went wrong. Please try again.");
+
+          setErrorMessage(
+            error?.text ??
+              "Something went wrong. Please try again."
+          );
         }
       );
   };
@@ -40,77 +61,243 @@ export default function ContactForm(){
     <form
       ref={form}
       onSubmit={sendEmail}
-      className="w-full max-w-lg bg-slate-800/60 border border-slate-700 rounded-2xl p-5 shadow-md backdrop-blur-sm flex flex-col gap-4"
       aria-live="polite"
+      className="
+        relative
+        overflow-hidden
+        rounded-[32px]
+        border
+        border-white/10
+        bg-white/[0.03]
+        p-6
+        md:p-8
+        backdrop-blur-2xl
+      "
     >
-      <div>
-        <h2 className="text-lg font-semibold text-slate-100">Send a message</h2>
-        <p className="mt-1 text-sm text-slate-300">
-          Fill out the form below — I’ll get back to you as soon as possible.
-        </p>
-      </div>
+      {/* Glow */}
+      <div className="absolute inset-0 bg-gradient-to-br from-fuchsia-500/5 via-transparent to-cyan-500/5" />
 
-      <label className="flex flex-col gap-2">
-        <span className="text-sm text-slate-200">Name</span>
-        <input
-          type="text"
-          name="user_name"
-          placeholder="Your name"
-          required
-          className="w-full px-3 py-2 rounded-lg bg-slate-700 border border-slate-600 text-slate-100 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
-          aria-label="Your name"
-        />
-      </label>
+      <div className="relative z-10">
+        {/* Header */}
+        <div>
+          <div
+            className="
+              inline-flex
+              items-center
+              rounded-full
+              border
+              border-fuchsia-500/20
+              bg-fuchsia-500/10
+              px-4
+              py-1
+              text-sm
+              text-fuchsia-300
+            "
+          >
+            Contact Form
+          </div>
 
-      <label className="flex flex-col gap-2">
-        <span className="text-sm text-slate-200">Email</span>
-        <input
-          type="email"
-          name="user_email"
-          placeholder="you@domain.com"
-          required
-          className="w-full px-3 py-2 rounded-lg bg-slate-700 border border-slate-600 text-slate-100 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
-          aria-label="Your email"
-        />
-      </label>
+          <h2 className="mt-5 text-3xl font-bold tracking-tight text-white">
+            Send me a message
+          </h2>
 
-      <label className="flex flex-col gap-2">
-        <span className="text-sm text-slate-200">Message</span>
-        <textarea
-          name="user_message"
-          rows={2}
-          placeholder="Write your message..."
-          required
-          className="w-full px-3 py-2 rounded-lg bg-slate-700 border border-slate-600 text-slate-100 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition resize-none"
-          aria-label="Your message"
-        />
-      </label>
+          <p className="mt-3 max-w-lg leading-relaxed text-slate-400">
+            Have an idea, collaboration, startup, or project in mind?
+            Fill out the form and I’ll get back to you soon.
+          </p>
+        </div>
 
-      <div className="flex items-center gap-3">
-        <button
-          type="submit"
-          disabled={loading}
-          className={`inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-shadow
-            ${loading ? "bg-indigo-400/60 cursor-wait" : "bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-600 hover:to-violet-600"}
-            text-white shadow-sm`}
+        {/* Fields */}
+        <div className="mt-10 flex flex-col gap-6">
+          {/* Name */}
+          <label className="flex flex-col gap-3">
+            <span className="text-sm font-medium text-slate-300">
+              Your Name
+            </span>
+
+            <input
+              type="text"
+              name="user_name"
+              required
+              placeholder="Ashwani Singh"
+              className="
+                h-14
+                rounded-2xl
+                border
+                border-white/10
+                bg-black/20
+                px-5
+                text-white
+                placeholder:text-slate-500
+                outline-none
+                transition-all
+                duration-300
+                focus:border-fuchsia-500/50
+                focus:bg-black/30
+                focus:ring-4
+                focus:ring-fuchsia-500/10
+              "
+            />
+          </label>
+
+          {/* Email */}
+          <label className="flex flex-col gap-3">
+            <span className="text-sm font-medium text-slate-300">
+              Email Address
+            </span>
+
+            <input
+              type="email"
+              name="user_email"
+              required
+              placeholder="you@example.com"
+              className="
+                h-14
+                rounded-2xl
+                border
+                border-white/10
+                bg-black/20
+                px-5
+                text-white
+                placeholder:text-slate-500
+                outline-none
+                transition-all
+                duration-300
+                focus:border-cyan-500/50
+                focus:bg-black/30
+                focus:ring-4
+                focus:ring-cyan-500/10
+              "
+            />
+          </label>
+
+          {/* Message */}
+          <label className="flex flex-col gap-3">
+            <span className="text-sm font-medium text-slate-300">
+              Message
+            </span>
+
+            <textarea
+              name="user_message"
+              required
+              rows={6}
+              placeholder="Tell me about your project..."
+              className="
+                rounded-2xl
+                border
+                border-white/10
+                bg-black/20
+                px-5
+                py-4
+                text-white
+                placeholder:text-slate-500
+                outline-none
+                resize-none
+                transition-all
+                duration-300
+                focus:border-indigo-500/50
+                focus:bg-black/30
+                focus:ring-4
+                focus:ring-indigo-500/10
+              "
+            />
+          </label>
+        </div>
+
+        {/* Bottom */}
+        <div className="mt-8 flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+          {/* Button */}
+          <button
+            type="submit"
+            disabled={loading}
+            className="
+              group
+              inline-flex
+              items-center
+              justify-center
+              gap-3
+              rounded-2xl
+              bg-gradient-to-r
+              from-fuchsia-500
+              via-violet-500
+              to-cyan-500
+              px-7
+              py-4
+              font-medium
+              text-white
+              shadow-[0_10px_40px_rgba(168,85,247,0.3)]
+              transition-all
+              duration-300
+              hover:scale-[1.02]
+              hover:shadow-[0_20px_60px_rgba(168,85,247,0.45)]
+              disabled:cursor-not-allowed
+              disabled:opacity-70
+            "
+          >
+            {loading ? (
+              <>
+                <Loader2
+                  size={18}
+                  className="animate-spin"
+                />
+                Sending...
+              </>
+            ) : (
+              <>
+                <Send
+                  size={18}
+                  className="transition-transform duration-300 group-hover:translate-x-1"
+                />
+                Send Message
+              </>
+            )}
+          </button>
+
+          {/* Status */}
+          <div className="min-h-[24px]">
+            {status === "success" && (
+              <div className="flex items-center gap-2 text-emerald-400">
+                <CheckCircle2 size={18} />
+
+                <span className="text-sm">
+                  Message sent successfully.
+                </span>
+              </div>
+            )}
+
+            {status === "error" && (
+              <div className="flex items-center gap-2 text-rose-400">
+                <AlertCircle size={18} />
+
+                <span className="text-sm">
+                  {errorMessage}
+                </span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Footer Note */}
+        <div
+          className="
+            mt-8
+            rounded-2xl
+            border
+            border-white/10
+            bg-black/20
+            px-5
+            py-4
+          "
         >
-          {loading ? "Sending..." : "Send Message"}
-        </button>
-
-        {/* small status indicators */}
-        <div className="ml-auto min-w-[140px]">
-          {status === "success" && (
-            <p className="text-sm text-emerald-400">✅ Message sent. Thank you!</p>
-          )}
-          {status === "error" && (
-            <p className="text-sm text-rose-400">❌ {errorMessage ?? "Failed to send."}</p>
-          )}
+          <p className="text-sm leading-relaxed text-slate-400">
+            I usually respond within{" "}
+            <span className="font-medium text-slate-200">
+              24–48 hours
+            </span>
+            . Looking forward to hearing about your idea.
+          </p>
         </div>
       </div>
-
-      <p className="text-xs text-slate-400 mt-1">
-        By sending you agree to be contacted. I generally reply within 1-2 business days.
-      </p>
     </form>
   );
 }

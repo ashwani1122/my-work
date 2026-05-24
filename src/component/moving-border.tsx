@@ -1,434 +1,628 @@
-import { useEffect, useRef, useState } from 'react';
-import GitHubIcon from '@mui/icons-material/GitHub';
-import InstagramIcon from '@mui/icons-material/Instagram';
-import ContactForm from './contactForm';
-import XIcon from '@mui/icons-material/X';
-import LinkedInIcon from '@mui/icons-material/LinkedIn';
-import { Contributions } from './contribution';
+"use client";
 
-interface BorderPosition {
-  top: number;
-  left: number;
-  width: number;
-  height: number;
-}
+import { useEffect, useRef, useState } from "react";
+import {
+  Mail,
+  ExternalLink,
+  Download,
+  ArrowUpRight,
+} from "lucide-react";
+import XIcon from '@mui/icons-material/X'; import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import GitHubIcon from '@mui/icons-material/GitHub'; import InstagramIcon from '@mui/icons-material/Instagram';
+import { motion } from "framer-motion";
+import Experience from "./experience";
+import ContactForm from "./contactForm";
 
-const MovingBorderComplete: React.FC = () => {
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const borderRef = useRef<HTMLDivElement | null>(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [elements, setElements] = useState<HTMLElement[]>([]);
+const skills = [
+  "React",
+  "Next.js",
+  "TypeScript",
+  "Node.js",
+  "PostgreSQL",
+  "MongoDB",
+  "Docker",
+  "Redis",
+  "Tailwind",
+  "Prisma",
+  "AWS",
+  "Kafka",
+  "Kubernetes",
+  "Python",
+  "FastAPI",
+  "Java",
+];
+
+const projects = [
+  {
+    title: "Workflow Automation",
+    image: "../assets/flowforge.png",
+    live: "https://workflow-automation-black.vercel.app",
+    github: "https://github.com/ashwani1122/workflow-automation",
+    description:
+      "Visual workflow automation platform inspired by Zapier and n8n.",
+  },
+  {
+    title: "Claude Sub Agent",
+    image: "../assets/sub-agent.png",
+    live: "https://claude-sub-agent.vercel.app",
+    github: "https://github.com/ashwani1122/claude-sub-agent",
+    description:
+      "AI-powered sub-agent orchestration system for autonomous tasks.",
+  },
+  {
+    title: "MemAI",
+    image: "../assets/memai.jpg",
+    live: "https://github.com/ashwani1122/memeai",
+    github: "https://github.com/ashwani1122/memeai",
+    description:
+      "AI meme generation platform combining creativity with automation.",
+  },
+];
+
+const experience = [
+  {
+    role: "Frontend Developer",
+    company: "Freelance",
+    duration: "2024 — Present",
+    description:
+      "Building modern full-stack applications, developer tools, and premium UI systems for startups and international clients.",
+  },
+  {
+    role: "Full Stack Engineer",
+    company: "Independent Projects",
+    duration: "2023 — Present",
+    description:
+      "Designed scalable systems with React, Node.js, PostgreSQL, Redis, Docker, and AI integrations.",
+  },
+];
+
+export default function Portfolio() {
+  const cursorRef = useRef<HTMLDivElement | null>(null);
+  const [mouse, setMouse] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    const moveCursor = (e: MouseEvent) => {
+      setMouse({ x: e.clientX, y: e.clientY });
+    };
 
-    const contentElements = Array.from(
-      containerRef.current.querySelectorAll('.content-item')
-    ) as HTMLElement[];
-    setElements(contentElements);
+    window.addEventListener("mousemove", moveCursor);
+
+    return () => window.removeEventListener("mousemove", moveCursor);
   }, []);
 
-  useEffect(() => {
-    if (elements.length === 0 || !borderRef.current || !containerRef.current) return;
-
-    const updateBorderPosition = () => {
-      const element = elements[currentIndex];
-      const containerRect = containerRef.current!.getBoundingClientRect();
-      const elementRect = element.getBoundingClientRect();
-
-      const position: BorderPosition = {
-        top: elementRect.top - containerRect.top - 8,
-        left: elementRect.left - containerRect.left - 8,
-        width: elementRect.width + 16,
-        height: elementRect.height + 16,
-      };
-
-      const border = borderRef.current!;
-      border.style.top = `${position.top}px`;
-      border.style.left = `${position.left}px`;
-      border.style.width = `${position.width}px`;
-      border.style.height = `${position.height}px`;
-
-      const existingLines = border.querySelectorAll('.scanning-line-vertical, .scanning-line-horizontal');
-      existingLines.forEach(line => line.remove());
-
-      const verticalLine = document.createElement('div');
-      verticalLine.className = 'scanning-line-vertical';
-      border.appendChild(verticalLine);
-
-      const horizontalLine = document.createElement('div');
-      horizontalLine.className = 'scanning-line-horizontal';
-      border.appendChild(horizontalLine);
-    };
-
-    updateBorderPosition();
-    window.addEventListener('resize', updateBorderPosition);
-
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % elements.length);
-    }, 3000);
-
-    return () => {
-      clearInterval(interval);
-      window.removeEventListener('resize', updateBorderPosition);
-    };
-  }, [currentIndex, elements]);
-
   return (
-    <>
-      <style>{`
-        @keyframes glowPulse { 0%,100%{background-position:0% 50%}50%{background-position:100% 50%} }
-        @keyframes scanHorizontal { 0%{left:-10px;opacity:0}10%{opacity:1}90%{opacity:1}100%{left:100%;opacity:0} }
-        @keyframes scanVertical { 0%{top:-10px;opacity:0}10%{opacity:1}90%{opacity:1}100%{top:100%;opacity:0} }
+    <div className="relative min-h-screen overflow-hidden bg-[#020617] text-white">
+      {/* Background */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute left-[-10%] top-[-10%] h-[500px] w-[500px] rounded-full bg-fuchsia-500/20 blur-3xl" />
 
-        .scanning-line-vertical {
-          position: absolute; top: 0; bottom: 0; width: 2px;
-          background: linear-gradient(to bottom, transparent 0%, rgba(192,38,211,0.9) 50%, transparent 100%);
-          box-shadow: 0 0 20px rgba(192,38,211,0.35);
-          animation: scanHorizontal 2s ease-in-out;
-          z-index: 11;
-        }
+        <div className="absolute bottom-[-10%] right-[-10%] h-[500px] w-[500px] rounded-full bg-cyan-500/20 blur-3xl" />
 
-        .scanning-line-horizontal {
-          position: absolute; left: 0; right: 0; height: 2px;
-          background: linear-gradient(to right, transparent 0%, rgba(34,211,238,0.9) 50%, transparent 100%);
-          box-shadow: 0 0 20px rgba(34,211,238,0.35);
-          animation: scanVertical 2s ease-in-out 0.25s;
-          z-index: 11;
-        }
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(to_right,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:70px_70px]" />
+      </div>
 
-        .glow-text { background: linear-gradient(135deg, rgba(192,38,211,0.9), rgba(34,211,238,0.85)); -webkit-background-clip: text; background-clip: text; color: transparent; background-size: 200% 200%; animation: glowPulse 3s ease-in-out infinite; }
+      {/* Cursor Glow */}
+      <div
+        ref={cursorRef}
+        className="pointer-events-none fixed z-30 hidden h-72 w-72 rounded-full bg-fuchsia-500/10 blur-3xl md:block"
+        style={{
+          left: mouse.x - 150,
+          top: mouse.y - 150,
+        }}
+      />
 
-        @media (max-width: 640px) { .moving-border { transition: all 0.4s ease; } }
-      `}</style>
-
-      {/* Main Wrapper */}
-      <div className="min-h-screen w-full bg-slate-950 text-slate-100 relative selection:bg-fuchsia-500/30">
-        
-        <div className="relative z-10 w-full flex flex-col items-center justify-center p-6">
-          <div className="w-full max-w-6xl">
-            {/* Nav */}
-            <nav className="flex justify-center mb-8 sticky top-4 z-50">
-              <div className="flex items-center gap-6 px-4 py-2 rounded-full border border-slate-700/50 bg-slate-900/80 backdrop-blur-md shadow-xl">
-                <a href="#home" className="text-sm font-medium text-slate-400 hover:text-white transition-colors">Home</a>
-                <a href="#projects" className="text-sm font-medium text-slate-400 hover:text-white transition-colors">Projects</a>
-                <a href="#contact" className="text-sm font-medium text-slate-400 hover:text-white transition-colors">Contact</a>
-                <a className="text-sm font-medium text-slate-400 hover:text-white transition-colors" href="/resume.pdf" target="_blank">Resume</a>
-                <a className='text-sm font-medium text-slate-400 hover:text-white transition-colors' href="/resume.pdf" download>Download</a>              </div>
-            </nav>
-
-            {/* Main profile card + moving border container */}
-            <div ref={containerRef} className="relative flex flex-col gap-6" aria-live="polite">
-              <div ref={borderRef} className="moving-border absolute pointer-events-none border border-slate-200/20 shadow-[0_0_40px_rgba(192,38,211,0.1)] rounded-lg overflow-hidden transition-[top_left_width_height] duration-700 ease-[cubic-bezier(0.4,0,0.2,1)]" />
-
-              <section id="home" className="mx-auto w-[min(90%,800px)] bg-slate-900/60 border border-slate-800 p-6 rounded-2xl flex flex-col gap-6 backdrop-blur-sm">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                {/* Left: profile image + meta */}
-                <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 w-full">
-                  <div className="flex-shrink-0 rounded-xl overflow-hidden bg-slate-800 border border-slate-700 flex items-center justify-center mt-4">
-                    <img
-                      className="content-item sm:w-32 md:w-40 object-cover rounded-md "
-                      src={'../assets/profile.png'}
-                      alt="Profile"
-                    />
-                  </div>
-
-                  <div className="flex-1 flex flex-col text-left">
-                    <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-                      <h1 className="content-item text-2xl sm:text-3xl md:text-4xl font-bold leading-tight glow-text">
-                        Ashwani
-                      </h1>
-                      <span className="inline-flex items-center rounded-full bg-emerald-400/10 px-2 py-1 text-xs font-medium text-emerald-400 ring-1 ring-inset ring-emerald-400/20">Available</span>
-                    </div>
-
-                    <p className="content-item mt-1 text-sm sm:text-base text-slate-400">Software/ Ai Engineer</p>
-
-                    <div className="content-item mt-3 flex items-center gap-2 text-sm text-slate-400 break-words">
-                      <img className="w-5 h-5 opacity-80" src="https://img.icons8.com/color/48/000000/gmail.png" alt="email" />
-                      <span className="select-all text-sm hover:text-slate-200 transition-colors">ashwanisingh3846@gmail.com</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Right: social icons */}
-                <div className="flex w-full items-center justify-between sm:w-auto gap-2 sm:gap-3 mt-2 sm:mt-0">
+      {/* Main */}
+      <main className="relative z-10 mx-auto max-w-7xl px-6 py-8 md:px-12">
+        {/* Navbar */}
+        <nav className="sticky top-6 z-50 mb-16 flex justify-center">
+          <div className="flex items-center gap-6 rounded-full border border-white/10 bg-white/[0.04] px-6 py-3 backdrop-blur-2xl shadow-[0_10px_50px_rgba(0,0,0,0.3)]">
+           {["Home", "Resume", "Projects", "Experience", "Contact"].map(
+              (item) =>
+                item === "Resume" ? (
                   <a
-                    href="https://x.com/243ashwani"
+                    key={item}
+                    href="/resume.pdf"
                     target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg border border-slate-700 bg-slate-800/50 hover:bg-slate-700 hover:text-white text-slate-400 transition-all text-sm"
+                    rel="noopener noreferrer"
+                    className="text-sm text-slate-400 transition hover:text-white"
                   >
-                    <XIcon sx={{ fontSize: 20 }} />
+                    {item}
                   </a>
-
+                ) : (
                   <a
-                    href="https://github.com/ashwani1122"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg border border-slate-700 bg-slate-800/50 hover:bg-slate-700 hover:text-white text-slate-400 transition-all text-sm"
+                    key={item}
+                    href={`#${item.toLowerCase()}`}
+                    className="text-sm text-slate-400 transition hover:text-white"
                   >
-                    <GitHubIcon sx={{ fontSize: 20 }} />
-                    <span className="hidden sm:inline">GitHub</span>
+                    {item}
                   </a>
-
-                </div>
-              </div>
-
-              <p className="content-item text-center text-slate-400 border-t border-slate-800/50 pt-4 mt-2">
-                Engineering end-to-end solutions with clean code and clear vision.
-              </p>
-            </section>
-              <section className="mx-auto w-[min(90%,800px)] mt-8">
-                <h2 className="text-2xl md:text-3xl font-semibold mb-4 text-slate-100 flex-start">About</h2>
-                <div className="text-slate-400 leading-relaxed text-justify hyphens-auto w-full">
-                    <p>
-                      tldr; self-taught by breaking things and building them back on the internet. I’m deeply interested in technology that makes a real difference, not just noise. I write code consistently, think in systems, and prefer learning through action. I’ve also spent time experimenting with content and growth, which shaped how I approach building and shipping. Right now, my focus is simple—build fast, learn faster, and create things that matter. If you’re curious to know more, feel free to connect.
-                    </p>
-                </div>
-
-                <div className="mt-8">
-                  <h3 className="text-xl font-medium mb-3 text-slate-200">Skills</h3>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                    {[
-                      { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg', name: 'React.js' },
-                      { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg', name: 'Next.js' },
-                      { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg', name: 'Node.js' },
-                      { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg', name: 'TypeScript' },
-                      { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg', name: 'CSS3' },
-                      { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg', name: 'HTML5' },
-                      { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg', name: 'Git' },
-                      { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg', name: 'GitHub' },
-                      { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg', name: 'JavaScript' },
-                      { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg', name: 'Express.js' },
-                      { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg', name: 'MongoDB' },
-                      { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg', name: 'MySQL' },
-                      { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg', name: 'PostgreSQL' },
-                      { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redis/redis-original.svg', name: 'Redis' },
-                      { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/heroku/heroku-original.svg', name: 'Heroku' },
-                      { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/firebase/firebase-original.svg', name: 'Firebase' },
-                      { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/prisma/prisma-original.svg', name: 'Prisma' },
-                      { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg', name: 'Tailwind' },
-                      { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg', name: 'Docker' },
-                      { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bun/bun-original.svg', name: 'Bun' },
-                      { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/fastapi/fastapi-original.svg', name: 'fastapi' },
-                      { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg', name: 'python' },
-                    ].map((skill) => (
-                      <div key={skill.name} className="flex items-center gap-2 rounded-lg border border-slate-700/50 px-3 py-2 bg-slate-800/30 hover:bg-slate-800/50 transition-colors">
-                        <img src={skill.icon} alt={`${skill.name} icon`} className="w-5 h-5" />
-                        <span className="text-sm text-slate-300">{skill.name}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </section>
-
-              {/* Projects */}
-              <section id="projects" className="mx-auto w-[min(90%,800px)] mt-12">
-                <h2 className="text-2xl md:text-3xl font-semibold mb-6 text-slate-100">Projects</h2>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {[
-                    
-                    { img: '../assets/memai.jpg', title: 'memai', link: 'https://github.com/ashwani1122/memeai', github: 'https://github.com/ashwani1122/memeai' },
-                    { img: '../assets/sub-agent.png', title: 'claude-sub-agent', link: 'https://claude-sub-agent.vercel.app', github: 'https://github.com/ashwani1122/claude-sub-agent' },
-                    { img: '../assets/flowforge.png', title: 'workflow automation tool', link: 'https://workflow-automation-black.vercel.app', github: 'https://github.com/ashwani1122/workflow-automation' },
-                    { img: '../assets/nexo.png', title: 'Nexo', link: 'https://nexo12.vercel.app/', github: 'https://github.com/ashwani1122/second-life-marketplace' },
-                    { img: '../assets/delfood.png', title: 'Delfood', link: 'https://frontendfooddel.vercel.app', github: 'https://github.com/ashwani1122/Food-order' },
-                    { img: '../assets/safedep.png', title: 'SafeDep', link: 'https://safedep2.vercel.app/', github: 'https://github.com/ashwani1122/safedep2' },
-                  ].map((project, idx) => (
-                    <article key={idx} className="group relative bg-slate-900/50 border border-slate-800 rounded-xl overflow-hidden hover:border-slate-600 transition-colors">
-                       {/* Hover Glow Effect */}
-                      <div className="absolute -inset-px bg-gradient-to-r from-teal-500 to-fuchsia-500 rounded-xl opacity-0 group-hover:opacity-20 blur transition duration-500" />
-                      
-                      <div className="relative">
-                        {project.link ? (
-                           <a href={project.link} target="_blank" rel="noreferrer" className="block overflow-hidden">
-                             <img src={project.img} alt={project.title} className="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-105" />
-                           </a>
-                        ) : (
-                          <div className="block overflow-hidden">
-                             <img src={project.img} alt={project.title} className="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-105" />
-                          </div>
-                        )}
-                        
-                        <div className="p-4 flex items-center justify-between bg-slate-900/90 backdrop-blur-sm border-t border-slate-800">
-                          <span className="font-medium text-slate-200">{project.title}</span>
-                          <a href={project.github} target="_blank" rel="noreferrer" className="px-4 py-1.5 rounded-full text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white transition-colors">
-                            Github
-                          </a>
-                          {project.title ==="workflow automation tool" &&<a className='px-4 py-1.5 rounded-full text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white transition-colors' href="https://www.youtube.com/watch?v=8cAox1foGsQ" target='_blanck'>video</a>}
-                        </div>
-                      </div>
-                    </article>
-                  ))}
-                </div>
-              </section>
-             <div>
-              <Contributions/>
-             </div>
-              {/* Contact */}
-              <div>
-              </div>
-              <section id="contact" className="mx-auto w-[min(90%,800px)] mt-12 mb-12 flex flex-col items-center gap-6">
-                <h2 className="text-2xl md:text-3xl font-semibold text-slate-100">Get in touch</h2>
-                  <div className="w-full flex flex-col md:flex-row gap-8 md:items-start md:justify-center">
-          <div className="flex-1">
-            <ContactForm />
+                )
+            )}
           </div>
+        </nav>
 
-          {/* Sidebar */}
-          <aside
-            className="
-              w-full md:w-80 
-              bg-slate-900/50 
-              border border-slate-700/50 
-              rounded-2xl 
-              p-6 
-              flex flex-col 
-              gap-5 
-              backdrop-blur-md 
-            "
-          >
-            <h3 className="text-xl font-semibold text-slate-100 mb-1">
-              Connect with me
-            </h3>
+        {/* Hero */}
+        <motion.section
+          id="home"
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="relative overflow-hidden rounded-[40px] border border-white/10 bg-white/[0.03] p-8 md:p-14 backdrop-blur-xl"
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-fuchsia-500/10 via-transparent to-cyan-500/10" />
 
-            <p className="text-sm text-slate-400">
-              I'm active on the following platforms — feel free to reach out!
-            </p>
+          <div className="relative flex flex-col gap-10 lg:flex-row lg:items-center lg:justify-between">
+            {/* Left */}
+            <div className="max-w-3xl">
+              <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-4 py-1 text-sm text-emerald-400">
+                <span className="h-2 w-2 rounded-full bg-emerald-400" />
+                Available for work
+              </div>
 
-            <div className="flex flex-col gap-3 mt-2">
-              {[
-                { href: "https://github.com/ashwani1122", icon: <GitHubIcon fontSize="small" />, text: "GitHub" },
-                { href: "https://x.com/243ashwani", icon: <XIcon fontSize="small" />, text: "Twitter" },
-                { href: "https://www.linkedin.com/in/ashwani-singh-308081303/", icon: <LinkedInIcon fontSize="small" />, text: "LinkedIn" },
-                { href: "https://www.instagram.com/ashwani123950", icon: <InstagramIcon fontSize="small" />, text: "Instagram" },
-              ].map((link) => (
+              <h1 className="text-5xl font-black tracking-tight md:text-7xl">
+                Ashwani Singh
+              </h1>
+
+              <p className="mt-5 max-w-2xl text-lg leading-relaxed text-slate-400 md:text-xl">
+                Full Stack & AI Engineer focused on building scalable systems,
+                premium user experiences, and meaningful developer products.
+              </p>
+
+              <div className="mt-8 flex flex-wrap gap-4">
                 <a
-                  key={link.text}
-                  href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="
-                    flex items-center gap-3 
-                    px-4 py-3 
-                    rounded-xl 
-                    border border-slate-800 
-                    bg-slate-800/20 
-                    hover:bg-slate-800/60 
-                    hover:border-slate-600 
-                    transition-all 
-                    duration-200 
-                    group
-                  "
+                  href="#projects"
+                  className="inline-flex items-center gap-2 rounded-2xl bg-white px-6 py-3 font-medium text-black transition hover:scale-[1.03]"
                 >
-                  <span className="text-slate-400 group-hover:text-white transition">
-                    {link.icon}
+                  View Projects
+                  <ArrowUpRight size={18} />
+                </a>
+
+                <a
+                  href="/resume.pdf"
+                  download
+                  className="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.03] px-6 py-3 text-white backdrop-blur-xl transition hover:bg-white/[0.08]"
+                >
+                  Resume
+                  <Download size={18} />
+                </a>
+              </div>
+
+              <div className="mt-10 flex flex-wrap gap-4">
+                {[
+                  {
+                    icon: <GitHubIcon  />,
+                    href: "https://github.com/ashwani1122",
+                  },
+                  {
+                    icon: <LinkedInIcon  />,
+                    href: "https://www.linkedin.com/in/ashwani-singh-308081303",
+                  },
+                  {
+                    icon: <XIcon  />,
+                    href: "https://x.com/243ashwani",
+                  },
+                  {
+                    icon: <InstagramIcon  />,
+                    href: "https://instagram.com",
+                  },
+                ].map((social, i) => (
+                  <a
+                    key={i}
+                    href={social.href}
+                    target="_blank"
+                    className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 text-slate-400 transition-all duration-300 hover:-translate-y-1 hover:bg-white/[0.08] hover:text-white"
+                  >
+                    {social.icon}
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            {/* Right */}
+            <div className="relative mx-auto">
+              <div className="absolute inset-0 rounded-[32px] bg-gradient-to-br from-fuchsia-500 to-cyan-500 blur-2xl opacity-30" />
+
+              <div className="relative rounded-[32px] border border-white/10 bg-white/[0.03] p-2 backdrop-blur-xl">
+                <img
+                  src="../assets/profile.png"
+                  alt="profile"
+                  className="h-[400px] w-[320px] rounded-[24px] object-cover"
+                />
+              </div>
+            </div>
+          </div>
+        </motion.section>
+
+        {/* About */}
+        <motion.section
+          id="about"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mt-28"
+        >
+          <h2 className="text-4xl font-bold">About</h2>
+
+          <p className="mt-8 max-w-4xl text-lg leading-relaxed text-slate-400">
+            Self-taught developer obsessed with building products that actually
+            matter. I enjoy designing scalable architectures, creating elegant
+            interfaces, and experimenting with AI systems. My focus is on
+            shipping fast, learning continuously, and building impactful
+            technology.
+          </p>
+        </motion.section>
+
+        {/* Skills */}
+        <motion.section
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          className="mt-28"
+        >
+          <h2 className="text-4xl font-bold">Skills</h2>
+
+          <div className="mt-10 grid grid-cols-2 gap-4 md:grid-cols-4">
+            {skills.map((skill) => (
+              <div
+                key={skill}
+                className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-5 transition-all duration-300 hover:-translate-y-1 hover:bg-white/[0.06]"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-fuchsia-500/10 to-cyan-500/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+
+                <span className="relative z-10 font-medium text-slate-200">
+                  {skill}
+                </span>
+              </div>
+            ))}
+          </div>
+        </motion.section>
+        <Experience/>
+        
+        {/* Projects */}
+        <motion.section
+          id="projects"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          className="mt-28"
+        >
+          <h2 className="text-4xl font-bold">Projects</h2>
+
+          <div className="mt-10 grid gap-8 md:grid-cols-2 xl:grid-cols-3">
+            {projects.map((project) => (
+              <div
+                key={project.title}
+                className="group overflow-hidden rounded-[28px] border border-white/10 bg-white/[0.03] transition-all duration-500 hover:-translate-y-2 hover:border-white/20 hover:shadow-[0_20px_80px_rgba(0,0,0,0.4)]"
+              >
+                <div className="relative overflow-hidden">
+                  <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/70 to-transparent" />
+
+                  <img
+                    src={project.image}
+                    alt={project.title}
+                    className="h-60 w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                </div>
+
+                <div className="p-6">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-xl font-semibold">
+                      {project.title}
+                    </h3>
+
+                    <a
+                      href={project.live}
+                      target="_blank"
+                      className="rounded-xl border border-white/10 p-2 transition hover:bg-white/10"
+                    >
+                      <ExternalLink size={18} />
+                    </a>
+                  </div>
+
+                  <p className="mt-4 leading-relaxed text-slate-400">
+                    {project.description}
+                  </p>
+
+                  <div className="mt-6 flex gap-3">
+                    <a
+                      href={project.github}
+                      target="_blank"
+                      className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2 text-sm transition hover:bg-white/[0.08]"
+                    >
+                      GitHub
+                    </a>
+
+                    <a
+                      href={project.live}
+                      target="_blank"
+                      className="rounded-xl bg-white px-4 py-2 text-sm font-medium text-black"
+                    >
+                      Live
+                    </a>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </motion.section>
+
+        {/* Experience */}
+        {/* <motion.section
+          id="experience"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          className="mt-28"
+        >
+          <h2 className="text-4xl font-bold">Experience</h2>
+
+          <div className="mt-12 space-y-8">
+            {experience.map((item, i) => (
+              <div
+                key={i}
+                className="rounded-[28px] border border-white/10 bg-white/[0.03] p-8 backdrop-blur-xl"
+              >
+                <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
+                  <div>
+                    <h3 className="text-2xl font-semibold">{item.role}</h3>
+
+                    <p className="mt-1 text-slate-400">
+                      {item.company}
+                    </p>
+                  </div>
+
+                  <span className="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-sm text-slate-300">
+                    {item.duration}
                   </span>
-                  <span className="text-slate-300 group-hover:text-white transition text-sm">
+                </div>
+
+                <p className="mt-6 leading-relaxed text-slate-400">
+                  {item.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </motion.section> */}
+
+        {/* Contact */}
+        {/* Contact */}
+<motion.section
+  id="contact"
+  initial={{ opacity: 0 }}
+  whileInView={{ opacity: 1 }}
+  viewport={{ once: true }}
+  className="
+    relative 
+    mt-28 
+    overflow-hidden 
+    rounded-[40px] 
+    border 
+    border-white/10 
+    bg-gradient-to-br 
+    from-fuchsia-500/10 
+    via-transparent 
+    to-cyan-500/10 
+    p-6 
+    md:p-12
+    backdrop-blur-2xl
+  "
+>
+  {/* Glow */}
+  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.08),transparent_35%)]" />
+
+  <div className="relative z-10">
+    {/* Heading */}
+    <div className="max-w-3xl">
+      <span
+        className="
+          inline-flex 
+          items-center 
+          rounded-full 
+          border 
+          border-fuchsia-500/20 
+          bg-fuchsia-500/10 
+          px-4 
+          py-1 
+          text-sm 
+          text-fuchsia-300
+        "
+      >
+        Contact
+      </span>
+
+      <h2 className="mt-5 text-4xl md:text-5xl font-black tracking-tight">
+        Let’s Build Something Amazing
+      </h2>
+
+      <p className="mt-5 text-lg leading-relaxed text-slate-300">
+        Whether you have a startup idea, want to collaborate on
+        something ambitious, or need help building scalable systems —
+        my inbox is always open.
+      </p>
+    </div>
+
+    {/* Content */}
+    <div className="mt-12 grid gap-8 lg:grid-cols-[1.4fr_0.8fr]">
+      {/* Contact Form */}
+      <div
+        className="
+          rounded-[32px]
+          border 
+          border-white/10 
+          bg-white/[0.04] 
+          p-6 
+          md:p-8
+          backdrop-blur-xl
+          shadow-[0_10px_40px_rgba(0,0,0,0.3)]
+        "
+      >
+        <ContactForm />
+      </div>
+
+      {/* Sidebar */}
+      <aside
+        className="
+          flex 
+          flex-col 
+          justify-between 
+          rounded-[32px] 
+          border 
+          border-white/10 
+          bg-white/[0.04] 
+          p-6 
+          backdrop-blur-xl
+          shadow-[0_10px_40px_rgba(0,0,0,0.3)]
+        "
+      >
+        <div>
+          <h3 className="text-2xl font-semibold text-white">
+            Connect with me
+          </h3>
+
+          <p className="mt-3 text-slate-400 leading-relaxed">
+            I’m active across multiple platforms. Feel free to reach
+            out, collaborate, or just say hi.
+          </p>
+
+          <div className="mt-8 flex flex-col gap-4">
+            {[
+              {
+                href: "https://github.com/ashwani1122",
+                icon: <GitHubIcon  />,
+                text: "GitHub",
+              },
+              {
+                href: "https://x.com/243ashwani",
+                icon: <XIcon  />,
+                text: "Twitter / X",
+              },
+              {
+                href: "https://www.linkedin.com/in/ashwani-singh-308081303/",
+                icon: <LinkedInIcon  />,
+                text: "LinkedIn",
+              },
+              {
+                href: "https://www.instagram.com/ashwani123950",
+                icon: <InstagramIcon  />,
+                text: "Instagram",
+              },
+            ].map((link) => (
+              <a
+                key={link.text}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="
+                  group
+                  flex 
+                  items-center 
+                  justify-between
+                  rounded-2xl 
+                  border 
+                  border-white/10 
+                  bg-white/[0.03] 
+                  px-5 
+                  py-4 
+                  transition-all 
+                  duration-300 
+                  hover:-translate-y-1
+                  hover:bg-white/[0.08]
+                "
+              >
+                <div className="flex items-center gap-4">
+                  <div
+                    className="
+                      rounded-xl 
+                      border 
+                      border-white/10 
+                      bg-black/20 
+                      p-3
+                      text-slate-300
+                    "
+                  >
+                    {link.icon}
+                  </div>
+
+                  <span className="text-slate-200">
                     {link.text}
                   </span>
-                </a>
-              ))}
-            </div>
-
-            {/* subtle bottom accent */}
-            <div className="pt-4 mt-2 border-t border-slate-800/50">
-              <p className="text-xs text-slate-500">
-                Let's connect and build something great.
-              </p>
-            </div>
-          </aside>
-                    </div>
-
-
-                <div
-    className="
-      w-full 
-      bg-slate-900/50 
-      border border-slate-800 
-      rounded-2xl 
-      p-8 
-      mt-8 
-      shadow-2xl 
-      backdrop-blur-md 
-      relative 
-      overflow-hidden 
-      group
-    "
-  >
-    {/* subtle gradient highlight on hover */}
-    <div 
-      className="
-        absolute inset-0 
-        bg-gradient-to-br from-indigo-500/5 to-purple-500/5 
-        opacity-0 
-        group-hover:opacity-100 
-        transition-opacity duration-500 
-        pointer-events-none
-      "
-    />
-
-    <h3 className="text-2xl font-semibold text-slate-100">
-      Let’s build together
-    </h3>
-
-    <p className="mt-3 text-slate-400 leading-relaxed">
-      I'm always excited to collaborate on meaningful projects — whether you're 
-      exploring new ideas, need help bringing a product to life, or want a partner 
-      for full-stack development. Let’s team up and create something impactful.
-    </p>
-
-    <ul className="mt-6 space-y-3">
-      {[
-        "Frontend Development",
-        "Backend Development",
-        "Full Stack Development",
-        "Applied Ai",
-      ].map((item) => (
-        <li 
-          key={item}
-          className="
-            flex items-center gap-3 
-            text-slate-300 
-            bg-slate-800/20 
-            px-4 py-2 
-            rounded-xl 
-            border border-slate-800/50 
-            hover:bg-slate-800/40 
-            hover:border-slate-600 
-            transition-all 
-            duration-200
-          "
-        >
-          <span className="w-2 h-2 rounded-full bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.5)]" />
-          <span className="text-sm">{item}</span>
-        </li>
-      ))}
-    </ul>
-
-    <p className="mt-6 text-sm text-slate-500">
-      Ready to start? My inbox is always open.
-    </p>
-  </div>
-
-              </section>
-
-              {/* Footer */}
-              <footer className="w-full mt-4 border-t border-slate-800/50 pt-6 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-slate-500 mb-8">
-                <p>© 2025 Ashwani Singh. All rights reserved.</p>
-                <div className="flex gap-4">
-                  <span className="hover:text-slate-300 cursor-pointer transition-colors">Privacy Policy</span>
-                  <span className="hover:text-slate-300 cursor-pointer transition-colors">Terms of Service</span>
                 </div>
-              </footer>
-            </div>
+
+                <ArrowUpRight
+                  size={18}
+                  className="
+                    text-slate-500 
+                    transition-transform 
+                    duration-300 
+                    group-hover:translate-x-1 
+                    group-hover:-translate-y-1
+                  "
+                />
+              </a>
+            ))}
           </div>
         </div>
-        {/* --- SCROLLABLE CONTENT END --- */}
-      </div>
-    </>
-  );
-};
 
-export default MovingBorderComplete;
+        {/* Bottom */}
+        <div
+          className="
+            mt-10 
+            rounded-2xl 
+            border 
+            border-white/10 
+            bg-black/20 
+            p-5
+          "
+        >
+          <p className="text-sm text-slate-400 leading-relaxed">
+            Currently focused on:
+          </p>
+
+          <div className="mt-4 flex gap-4 flex-wrap items-center p-1">
+            {[
+              "Full Stack",
+              "AI Systems",
+              "DevOps",
+              "System Design",
+            ].map((item) => (
+              <span
+                key={item}
+                className="
+                  rounded-full 
+                  border 
+                  border-white/10 
+                  bg-white/[0.03] 
+                  px-3 
+                  py-1.5 
+                  text-xs 
+                  text-slate-300
+                "
+              >
+                {item}
+              </span>
+            ))}
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</motion.section>
+
+        {/* Footer */}
+        <footer className="mt-20 border-t border-white/10 py-8">
+          <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
+            <p className="text-sm tracking-wide text-slate-500">
+              © 2026 Ashwani Singh. All rights reserved.
+            </p>
+
+            <div className="flex items-center gap-6 text-sm text-slate-500">
+              <a href="#">Privacy</a>
+              <a href="#">Terms</a>
+            </div>
+          </div>
+        </footer>
+      </main>
+    </div>
+  );
+}
+
