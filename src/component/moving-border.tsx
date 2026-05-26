@@ -161,7 +161,7 @@ export default function Portfolio() {
                 </a>
 
                 <a
-                  href="/resume.pdf"
+                  href="/Myresume.pdf"
                   download
                   className="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.03] px-6 py-3 text-white backdrop-blur-xl transition hover:bg-white/[0.08]"
                 >
