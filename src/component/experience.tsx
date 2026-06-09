@@ -17,7 +17,7 @@ const experiences = [
     duration: "may 2026 — Present",
     location: "Remote",
     description:
-      "Built scalable UI systems, improved dashboard performance, developed Storybook design components, and optimized developer experience using Next.js, TypeScript, and TanStack Query.",
+      "Developing and maintaining end-to-end web applications using Next.js for the frontend and Go for backend APIs and algorithms. Working with PostgreSQL for database design and optimization, and implementing CI/CD pipelines using GitHub Actions to streamline testing and deployments. Actively contributing to scalable, high-performance solutions in a collaborative development environment.Built the reward system for the psyplay.io gaming with ai intelligence using a coins plateform and Integrated the optimized sound features for the gaming.",
     skills: [
       "Next.js",
       "TypeScript",
@@ -37,7 +37,7 @@ const experiences = [
     duration: "Aug 2025 — Dec 2025",
     location: "Remote",
     description:
-      "Developed full-stack applications with modern architectures, authentication systems,Reatime Chatting Systems ,  APIs, and reusable UI patterns focused on scalability and performance.",
+      "Developed full-stack applications with modern architectures, authentication systems, real-time chatting systems, APIs, and reusable UI patterns focused on scalability and performance.",
     skills: [
       "Node.js",
       "Supabase",
