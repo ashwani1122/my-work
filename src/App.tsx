@@ -1,15 +1,5 @@
+import Portfolio from './component/moving-border';
 
-
-import MovingBorderComplete from './component/moving-border';
-
-
-
-export default function App(){
-  return (
-    <>
-    <div className='grid-background'>
-        <MovingBorderComplete/>
-    </div>
-    </>
-  )
+export default function App() {
+  return <Portfolio />;
 }

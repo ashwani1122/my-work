@@ -1,300 +1,84 @@
-// components/Experience.tsx
-"use client";
-
 import { motion } from "framer-motion";
-import {
-  Briefcase,
-  CalendarDays,
-  MapPin,
-  ExternalLink,
-  Sparkles,
-} from "lucide-react";
+import { ExternalLink } from "lucide-react";
 
 const experiences = [
   {
     company: "Hibiscustech",
     role: "Full Stack Product Engineer",
-    duration: "may 2026 — Present",
+    duration: "May 2026 — Present",
     location: "Remote",
     description:
-      "Developing and maintaining end-to-end web applications using Next.js for the frontend and Go for backend APIs and algorithms. Working with PostgreSQL for database design and optimization, and implementing CI/CD pipelines using GitHub Actions to streamline testing and deployments. Actively contributing to scalable, high-performance solutions in a collaborative development environment.Built the reward system for the psyplay.io gaming with ai intelligence using a coins plateform and Integrated the optimized sound features for the gaming.",
-    skills: [
-      "Next.js",
-      "TypeScript",
-      "Node.js",
-      "React Query",
-      "Tailwind",
-      "Storybook",
-      "GO",
-      "TanStack Query",
-      "AWS",
-    ],
+      "Developing end-to-end web applications using Next.js and Go. Working with PostgreSQL for database design, implementing CI/CD pipelines via GitHub Actions. Built the reward system for psyplay.io gaming platform with AI-driven coin mechanics and optimized sound features.",
+    skills: ["Next.js", "TypeScript", "Node.js", "React Query", "Tailwind", "GO", "AWS"],
     link: "https://hibiscustech.org/",
   },
   {
     company: "Nexo",
-    role: "Full Stack Developer Freelancer",
+    role: "Full Stack Developer — Freelance",
     duration: "Aug 2025 — Dec 2025",
     location: "Remote",
     description:
-      "Developed full-stack applications with modern architectures, authentication systems, real-time chatting systems, APIs, and reusable UI patterns focused on scalability and performance.",
-    skills: [
-      "Node.js",
-      "Supabase",
-      "Typescript",
-      "React",
-      "Express",
-      "JWT",
-      "PostgreSQL",
-    ],
-    link: "#",
+      "Developed full-stack applications with modern architectures, authentication systems, real-time chat, APIs, and reusable UI patterns focused on scalability and performance.",
+    skills: ["Node.js", "Supabase", "TypeScript", "React", "Express", "JWT", "PostgreSQL"],
+    link: "",
   },
 ];
 
 export default function Experience() {
   return (
-    <section
-      id="experience"
-      className="relative w-full py-28 overflow-hidden"
-    >
-      {/* Background Glow */}
-      <div className="absolute top-0 left-1/3 h-72 w-72 rounded-full bg-fuchsia-500/10 blur-3xl" />
+    <section id="experience" className="mb-24">
+      <p className="text-xs font-semibold uppercase tracking-widest text-[#bbb] dark:text-[#555] mb-8">
+        Work Experience
+      </p>
 
-      <div className="absolute bottom-0 right-1/4 h-72 w-72 rounded-full bg-cyan-500/10 blur-3xl" />
-
-      <div className="relative mx-auto max-w-6xl px-6 md:px-10">
-        {/* Heading */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
-          viewport={{ once: true }}
-          className="mb-20"
-        >
-          <div
-            className="
-              inline-flex
-              items-center
-              gap-2
-              rounded-full
-              border
-              border-fuchsia-500/20
-              bg-fuchsia-500/10
-              px-4
-              py-1
-              text-sm
-              text-fuchsia-300
-            "
+      <div className="flex flex-col gap-5">
+        {experiences.map((exp, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.4, delay: i * 0.1 }}
+            className="rounded-xl border border-[#e5e5e5] dark:border-[#1f1f1f] bg-[#fafafa] dark:bg-[#0f0f0f] p-5 hover:border-[#ccc] dark:hover:border-[#2e2e2e] transition-colors duration-300"
           >
-            <Sparkles size={14} />
-            Career Journey
-          </div>
-
-          <h2 className="mt-6 text-5xl md:text-6xl font-black tracking-tight text-white">
-            Experience
-          </h2>
-
-          <p className="mt-5 max-w-2xl text-lg leading-relaxed text-slate-400">
-            Building products, scaling systems, and crafting premium
-            digital experiences through modern technologies.
-          </p>
-        </motion.div>
-
-        {/* Timeline */}
-        <div className="relative ml-4 border-l border-white/10">
-          {experiences.map((exp, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, x: -40 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{
-                duration: 0.7,
-                delay: index * 0.12,
-              }}
-              viewport={{ once: true }}
-              className="relative mb-14 pl-10"
-            >
-              {/* Timeline Dot */}
-              <div
-                className="
-                  absolute
-                  -left-[13px]
-                  top-6
-                  h-6
-                  w-6
-                  rounded-full
-                  border-4
-                  border-[#020617]
-                  bg-gradient-to-br
-                  from-fuchsia-500
-                  to-cyan-500
-                  shadow-[0_0_25px_rgba(168,85,247,0.6)]
-                "
-              />
-
-              {/* Card */}
-              <div
-                className="
-                  group
-                  relative
-                  overflow-hidden
-                  rounded-[32px]
-                  border
-                  border-white/10
-                  bg-white/[0.03]
-                  p-6
-                  md:p-8
-                  backdrop-blur-2xl
-                  transition-all
-                  duration-500
-                  hover:-translate-y-2
-                  hover:border-white/20
-                  hover:bg-white/[0.05]
-                  hover:shadow-[0_20px_80px_rgba(0,0,0,0.45)]
-                "
-              >
-                {/* Glow Overlay */}
-                <div
-                  className="
-                    absolute
-                    inset-0
-                    opacity-0
-                    transition-opacity
-                    duration-500
-                    group-hover:opacity-100
-                    bg-gradient-to-br
-                    from-fuchsia-500/10
-                    via-transparent
-                    to-cyan-500/10
-                  "
-                />
-
-                <div className="relative z-10">
-                  {/* Top */}
-                  <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
-                    {/* Left */}
-                    <div>
-                      <div className="flex items-center gap-2 text-slate-400">
-                        <Briefcase size={16} />
-
-                        <span className="text-sm tracking-wide">
-                          Experience
-                        </span>
-                      </div>
-
-                      <h3 className="mt-4 text-3xl font-bold tracking-tight text-white">
-                        {exp.role}
-                      </h3>
-
-                      <p className="mt-2 text-lg text-slate-300">
-                        {exp.company}
-                      </p>
-                    </div>
-
-                    {/* Visit */}
-                    <a
-                      href={exp.link}
-                      target="_blank"
-                      className="
-                        inline-flex
-                        items-center
-                        gap-2
-                        self-start
-                        rounded-2xl
-                        border
-                        border-white/10
-                        bg-white/[0.03]
-                        px-5
-                        py-3
-                        text-sm
-                        text-slate-300
-                        transition-all
-                        duration-300
-                        hover:bg-white/[0.08]
-                        hover:text-white
-                      "
-                    >
-                      Visit
-                      <ExternalLink size={16} />
-                    </a>
-                  </div>
-
-                  {/* Meta */}
-                  <div className="mt-8 flex flex-wrap gap-4">
-                    <div
-                      className="
-                        inline-flex
-                        items-center
-                        gap-2
-                        rounded-full
-                        border
-                        border-white/10
-                        bg-black/20
-                        px-4
-                        py-2
-                        text-sm
-                        text-slate-300
-                      "
-                    >
-                      <CalendarDays size={15} />
-                      {exp.duration}
-                    </div>
-
-                    <div
-                      className="
-                        inline-flex
-                        items-center
-                        gap-2
-                        rounded-full
-                        border
-                        border-white/10
-                        bg-black/20
-                        px-4
-                        py-2
-                        text-sm
-                        text-slate-300
-                      "
-                    >
-                      <MapPin size={15} />
-                      {exp.location}
-                    </div>
-                  </div>
-
-                  {/* Description */}
-                  <p className="mt-8 max-w-4xl leading-relaxed text-slate-400">
-                    {exp.description}
-                  </p>
-
-                  {/* Skills */}
-                  <div className="mt-8 flex flex-wrap gap-3">
-                    {exp.skills.map((skill, skillIndex) => (
-                      <span
-                        key={skillIndex}
-                        className="
-                          rounded-full
-                          border
-                          border-white/10
-                          bg-white/[0.03]
-                          px-4
-                          py-2
-                          text-sm
-                          text-slate-300
-                          transition-all
-                          duration-300
-                          hover:border-fuchsia-500/30
-                          hover:bg-fuchsia-500/10
-                          hover:text-white
-                        "
-                      >
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
-                </div>
+            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-3">
+              <div>
+                <h3 className="font-semibold text-[#111] dark:text-white text-base">{exp.role}</h3>
+                <p className="text-sm text-[#777] dark:text-[#777] mt-0.5">
+                  {exp.company} · {exp.location}
+                </p>
               </div>
-            </motion.div>
-          ))}
-        </div>
+              <div className="flex items-center gap-3 shrink-0">
+                <span className="text-xs text-[#aaa] dark:text-[#555]">{exp.duration}</span>
+                {exp.link && (
+                  <a
+                    href={exp.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-xs text-[#888] dark:text-[#777] hover:text-[#111] dark:hover:text-white transition-colors"
+                  >
+                    Visit <ExternalLink size={11} />
+                  </a>
+                )}
+              </div>
+            </div>
+
+            <p className="text-sm text-[#666] dark:text-[#888] leading-relaxed mb-4">
+              {exp.description}
+            </p>
+
+            <div className="flex flex-wrap gap-1.5">
+              {exp.skills.map((skill) => (
+                <span
+                  key={skill}
+                  className="rounded-md bg-[#ebebeb] dark:bg-[#161616] border border-[#e0e0e0] dark:border-[#1f1f1f] px-2 py-1 text-xs text-[#777] dark:text-[#777]"
+                >
+                  {skill}
+                </span>
+              ))}
+            </div>
+          </motion.div>
+        ))}
       </div>
     </section>
   );
