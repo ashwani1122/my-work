@@ -58,7 +58,7 @@ const projects = [
     live: "https://github.com/ashwani1122/memeai",
     github: "https://github.com/ashwani1122/memeai",
     description: "AI meme generation platform combining creativity with automation.",
-    tags: ["Python", "FastAPI", "React"],
+    tags: ["Python", "OpenAI", "PostgreSQL", "Semantic Search", "Vector Database", "RAG", "Graph DB", "PyPI", "Next.js", "TypeScript"],
   },
 ];
 
