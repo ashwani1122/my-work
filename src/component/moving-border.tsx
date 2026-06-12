@@ -16,6 +16,24 @@ const skills = [
 
 const projects = [
   {
+    title: "ResumeAI",
+    year: "2026",
+    image: "../assets/resumeapp.png",
+    live: "https://resumeapp.in",
+    github: "https://resumeapp.in",
+    description: "AI-powered resume builder creating ATS-optimized resumes with GPT-4 enhancement and real-time preview.",
+    tags: ["Next.js", "TypeScript", "GPT-4", "PDF Export"],
+  },
+  {
+    title: "Agency Auditor",
+    year: "2026",
+    image: "../assets/agency-auditor.png",
+    live: "https://agency-auditor.vercel.app",
+    github: "https://agency-auditor.vercel.app",
+    description: "AI tool that audits marketing agency reports and delivers blunt verdicts on real performance vs. vanity metrics.",
+    tags: ["Next.js", "TypeScript", "AI", "Dodo Payments"],
+  },
+  {
     title: "Workflow Automation",
     year: "2025",
     image: "../assets/flowforge.png",
