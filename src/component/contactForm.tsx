@@ -3,20 +3,22 @@ import emailjs from "@emailjs/browser";
 import { Send, Loader2, CheckCircle2, AlertCircle } from "lucide-react";
 
 const inputClass = `
-  w-full h-11 rounded-lg px-4 text-sm outline-none transition-colors duration-200
-  border border-[#e0e0e0] bg-white text-[#111] placeholder:text-[#bbb]
-  focus:border-[#b0b0b0]
-  dark:border-[#222] dark:bg-[#111] dark:text-white dark:placeholder:text-[#444]
-  dark:focus:border-[#444]
+  w-full h-11 rounded-none px-4 text-sm font-bold outline-none
+  border-2 border-black bg-[#f4f1ea] text-black placeholder:text-neutral-400 placeholder:font-normal
+  focus:bg-[#ffe600] focus:placeholder:text-black/40
+  dark:border-white dark:bg-black dark:text-white dark:placeholder:text-neutral-600
+  dark:focus:bg-[#ffe600] dark:focus:text-black dark:focus:placeholder:text-black/40
 `.trim();
 
 const textareaClass = `
-  w-full rounded-lg px-4 py-3 text-sm outline-none resize-none transition-colors duration-200
-  border border-[#e0e0e0] bg-white text-[#111] placeholder:text-[#bbb]
-  focus:border-[#b0b0b0]
-  dark:border-[#222] dark:bg-[#111] dark:text-white dark:placeholder:text-[#444]
-  dark:focus:border-[#444]
+  w-full rounded-none px-4 py-3 text-sm font-bold outline-none resize-none
+  border-2 border-black bg-[#f4f1ea] text-black placeholder:text-neutral-400 placeholder:font-normal
+  focus:bg-[#ffe600] focus:placeholder:text-black/40
+  dark:border-white dark:bg-black dark:text-white dark:placeholder:text-neutral-600
+  dark:focus:bg-[#ffe600] dark:focus:text-black dark:focus:placeholder:text-black/40
 `.trim();
+
+const labelClass = "block text-xs font-bold uppercase tracking-widest mb-2 before:content-['>_'] before:text-[#b8a600] dark:before:text-[#ffe600]";
 
 export default function ContactForm() {
   const form = useRef<HTMLFormElement | null>(null);
@@ -53,8 +55,8 @@ export default function ContactForm() {
   return (
     <form ref={form} onSubmit={sendEmail} aria-live="polite" className="flex flex-col gap-5">
       <div>
-        <label className="block text-xs font-medium text-[#888] dark:text-[#666] mb-2">
-          Your Name
+        <label className={labelClass}>
+          user_name:
         </label>
         <input
           type="text"
@@ -66,8 +68,8 @@ export default function ContactForm() {
       </div>
 
       <div>
-        <label className="block text-xs font-medium text-[#888] dark:text-[#666] mb-2">
-          Email Address
+        <label className={labelClass}>
+          email_address:
         </label>
         <input
           type="email"
@@ -79,8 +81,8 @@ export default function ContactForm() {
       </div>
 
       <div>
-        <label className="block text-xs font-medium text-[#888] dark:text-[#666] mb-2">
-          Message
+        <label className={labelClass}>
+          message:
         </label>
         <textarea
           name="user_message"
@@ -95,30 +97,30 @@ export default function ContactForm() {
         <button
           type="submit"
           disabled={loading}
-          className="inline-flex items-center gap-2 rounded-lg bg-[#111] dark:bg-white px-5 py-2.5 text-sm font-medium text-white dark:text-black hover:bg-[#333] dark:hover:bg-[#e5e5e5] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+          className="inline-flex items-center gap-2 rounded-none border-2 border-black dark:border-white bg-black dark:bg-white px-5 py-2.5 text-sm font-bold uppercase text-white dark:text-black shadow-[4px_4px_0px_0px_#000] dark:shadow-[4px_4px_0px_0px_#fff] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none hover:bg-[#ffe600] hover:text-black dark:hover:bg-[#ffe600] dark:hover:text-black disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {loading ? (
             <>
               <Loader2 size={15} className="animate-spin" />
-              Sending...
+              SENDING...
             </>
           ) : (
             <>
               <Send size={15} />
-              Send Message
+              SEND_MESSAGE
             </>
           )}
         </button>
 
         <div className="min-h-[20px]">
           {status === "success" && (
-            <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 text-sm">
+            <div className="flex items-center gap-2 text-xs font-bold uppercase border-2 border-black dark:border-white bg-green-400 text-black px-3 py-1.5">
               <CheckCircle2 size={15} />
-              Sent successfully.
+              SENT_OK
             </div>
           )}
           {status === "error" && (
-            <div className="flex items-center gap-2 text-rose-600 dark:text-rose-400 text-sm">
+            <div className="flex items-center gap-2 text-xs font-bold uppercase border-2 border-black dark:border-white bg-red-400 text-black px-3 py-1.5">
               <AlertCircle size={15} />
               {errorMessage}
             </div>

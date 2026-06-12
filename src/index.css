@@ -4,13 +4,74 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 * {
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, 'Cascadia Code', Consolas, monospace;
 }
 
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
 }
 
-html, body, #root {
-  transition: background-color 0.3s ease, color 0.3s ease;
+::selection {
+  background: #ffe600;
+  color: #000;
+}
+
+/* Chunky square scrollbar */
+::-webkit-scrollbar {
+  width: 14px;
+}
+::-webkit-scrollbar-track {
+  background: #f4f1ea;
+  border-left: 2px solid #000;
+}
+::-webkit-scrollbar-thumb {
+  background: #000;
+  border: 2px solid #f4f1ea;
+}
+.dark ::-webkit-scrollbar-track {
+  background: #000;
+  border-left: 2px solid #fff;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #fff;
+  border: 2px solid #000;
+}
+
+/* Graph-paper grid background */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, rgba(0, 0, 0, 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.07) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+.dark .bg-grid {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+}
+
+/* Terminal cursor blink — step-end keeps it mechanical, no fade */
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+.animate-blink {
+  animation: blink 1s step-end infinite;
+}
+
+/* Skills ticker tape */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.animate-marquee {
+  animation: marquee 22s linear infinite;
+}
+.animate-marquee:hover {
+  animation-play-state: paused;
 }

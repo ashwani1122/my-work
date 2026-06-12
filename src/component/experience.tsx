@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { ExternalLink } from "lucide-react";
 
 const experiences = [
@@ -27,35 +26,35 @@ const experiences = [
 export default function Experience() {
   return (
     <section id="experience" className="mb-24">
-      <p className="text-xs font-semibold uppercase tracking-widest text-[#bbb] dark:text-[#555] mb-8">
-        Work Experience
-      </p>
+      <div className="flex items-center gap-3 mb-8">
+        <span className="rounded-none border-2 border-black dark:border-white bg-[#ffe600] px-2 py-1 text-xs font-bold text-black">
+          003
+        </span>
+        <span className="text-xs font-bold uppercase tracking-widest">Work_Experience</span>
+        <span className="flex-1 h-[2px] bg-black dark:bg-white" />
+      </div>
 
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-col gap-8">
         {experiences.map((exp, i) => (
-          <motion.div
+          <div
             key={i}
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.4, delay: i * 0.1 }}
-            className="rounded-xl border border-[#e5e5e5] dark:border-[#1f1f1f] bg-[#fafafa] dark:bg-[#0f0f0f] p-5 hover:border-[#ccc] dark:hover:border-[#2e2e2e] transition-colors duration-300"
+            className="rounded-none border-2 border-black dark:border-white bg-white dark:bg-black p-5 shadow-[6px_6px_0px_0px_#000] dark:shadow-[6px_6px_0px_0px_#fff] hover:shadow-[2px_2px_0px_0px_#000] dark:hover:shadow-[2px_2px_0px_0px_#fff] hover:translate-x-[4px] hover:translate-y-[4px]"
           >
-            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-3">
+            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-3 border-b-2 border-black dark:border-white pb-3">
               <div>
-                <h3 className="font-semibold text-[#111] dark:text-white text-base">{exp.role}</h3>
-                <p className="text-sm text-[#777] dark:text-[#777] mt-0.5">
-                  {exp.company} · {exp.location}
+                <h3 className="font-bold uppercase text-base">{exp.role}</h3>
+                <p className="text-xs font-bold uppercase mt-1">
+                  {exp.company} :: {exp.location}
                 </p>
               </div>
               <div className="flex items-center gap-3 shrink-0">
-                <span className="text-xs text-[#aaa] dark:text-[#555]">{exp.duration}</span>
+                <span className="text-xs font-bold border-2 border-black dark:border-white px-2 py-0.5">{exp.duration}</span>
                 {exp.link && (
                   <a
                     href={exp.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-xs text-[#888] dark:text-[#777] hover:text-[#111] dark:hover:text-white transition-colors"
+                    className="inline-flex items-center gap-1 text-xs font-bold uppercase border-2 border-black dark:border-white px-2 py-0.5 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black active:translate-x-[2px] active:translate-y-[2px]"
                   >
                     Visit <ExternalLink size={11} />
                   </a>
@@ -63,7 +62,7 @@ export default function Experience() {
               </div>
             </div>
 
-            <p className="text-sm text-[#666] dark:text-[#888] leading-relaxed mb-4">
+            <p className="text-sm leading-relaxed mb-4">
               {exp.description}
             </p>
 
@@ -71,13 +70,13 @@ export default function Experience() {
               {exp.skills.map((skill) => (
                 <span
                   key={skill}
-                  className="rounded-md bg-[#ebebeb] dark:bg-[#161616] border border-[#e0e0e0] dark:border-[#1f1f1f] px-2 py-1 text-xs text-[#777] dark:text-[#777]"
+                  className="rounded-none bg-[#ffe600] border border-black px-2 py-1 text-xs font-bold uppercase text-black"
                 >
                   {skill}
                 </span>
               ))}
             </div>
-          </motion.div>
+          </div>
         ))}
       </div>
     </section>

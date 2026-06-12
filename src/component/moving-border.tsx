@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
 import { ArrowUpRight, Download, ExternalLink, Sun, Moon } from "lucide-react";
 import XIcon from '@mui/icons-material/X';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
@@ -7,6 +6,7 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import Experience from "./experience";
 import ContactForm from "./contactForm";
+import { Contributions } from "./contribution";
 
 const skills = [
   "React", "Next.js", "TypeScript", "Node.js", "PostgreSQL",
@@ -69,11 +69,15 @@ const socials = [
   { icon: <InstagramIcon fontSize="small" />, href: "https://www.instagram.com/ashwani123950", label: "Instagram" },
 ];
 
-function SectionLabel({ children }: { children: React.ReactNode }) {
+function SectionLabel({ index, children }: { index: string; children: React.ReactNode }) {
   return (
-    <p className="text-xs font-semibold uppercase tracking-widest text-[#bbb] dark:text-[#555] mb-8">
-      {children}
-    </p>
+    <div className="flex items-center gap-3 mb-8">
+      <span className="rounded-none border-2 border-black dark:border-white bg-[#ffe600] px-2 py-1 text-xs font-bold text-black">
+        {index}
+      </span>
+      <span className="text-xs font-bold uppercase tracking-widest">{children}</span>
+      <span className="flex-1 h-[2px] bg-black dark:bg-white" />
+    </div>
   );
 }
 
@@ -91,20 +95,20 @@ export default function Portfolio() {
   }, [isDark]);
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#0a0a0a] text-[#111] dark:text-white">
+    <div className="min-h-screen bg-[#f4f1ea] dark:bg-black bg-grid text-black dark:text-white font-mono">
       {/* Nav */}
-      <header className="sticky top-0 z-50 border-b border-[#e8e8e8] dark:border-[#1a1a1a] bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur-sm">
+      <header className="sticky top-0 z-50 border-b-2 border-black dark:border-white bg-[#f4f1ea] dark:bg-black">
         <div className="mx-auto max-w-2xl px-6 h-16 flex items-center justify-between">
-          <span className="font-semibold text-sm tracking-tight text-[#111] dark:text-white">
-            Ashwani Singh
+          <span className="font-bold text-sm uppercase tracking-tight bg-black dark:bg-white text-white dark:text-black px-2 py-1">
+            ASHWANI_SINGH<span className="animate-blink">_</span>
           </span>
-          <div className="flex items-center gap-5">
-            <nav className="hidden sm:flex items-center gap-5 text-sm text-[#666] dark:text-[#666]">
+          <div className="flex items-center gap-4">
+            <nav className="hidden sm:flex items-center gap-4 text-sm font-bold uppercase">
               {["About", "Projects", "Contact"].map((item) => (
                 <a
                   key={item}
                   href={`#${item.toLowerCase()}`}
-                  className="hover:text-[#111] dark:hover:text-white transition-colors duration-200"
+                  className="hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black px-1"
                 >
                   {item}
                 </a>
@@ -112,7 +116,7 @@ export default function Portfolio() {
               <a
                 href="/Myresume.pdf"
                 target="_blank"
-                className="hover:text-[#111] dark:hover:text-white transition-colors duration-200"
+                className="hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black px-1"
               >
                 Resume
               </a>
@@ -122,7 +126,7 @@ export default function Portfolio() {
             <button
               onClick={() => setIsDark(!isDark)}
               aria-label="Toggle theme"
-              className="rounded-lg border border-[#e5e5e5] dark:border-[#1f1f1f] p-2 text-[#666] dark:text-[#777] hover:border-[#ccc] dark:hover:border-[#333] hover:text-[#111] dark:hover:text-white transition-all duration-200"
+              className="rounded-none border-2 border-black dark:border-white p-2 bg-white dark:bg-black shadow-[3px_3px_0px_0px_#000] dark:shadow-[3px_3px_0px_0px_#fff] active:translate-x-[3px] active:translate-y-[3px] active:shadow-none hover:bg-[#ffe600] dark:hover:bg-[#ffe600] dark:hover:text-black"
             >
               {isDark ? <Sun size={16} /> : <Moon size={16} />}
             </button>
@@ -132,44 +136,43 @@ export default function Portfolio() {
 
       <main className="mx-auto max-w-2xl px-6 py-16">
         {/* Hero */}
-        <motion.section
-          id="home"
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="mb-24"
-        >
-          <div className="flex items-center gap-2 mb-6">
-            <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="text-sm text-[#666] dark:text-[#666]">Available for work</span>
+        <section id="home" className="mb-24">
+          <div className="inline-flex items-center gap-2 mb-6 border-2 border-black dark:border-white px-3 py-1 bg-white dark:bg-black">
+            <span className="h-2 w-2 bg-green-500 animate-blink" />
+            <span className="text-xs font-bold uppercase tracking-wider">status: available_for_work</span>
           </div>
 
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-5 leading-tight text-[#111] dark:text-white">
-            hi, ashwani here.
+          <p className="text-xs font-bold uppercase tracking-widest mb-3">
+          </p>
+
+          <h1 className="text-4xl md:text-6xl font-bold uppercase tracking-tight mb-5 leading-tight">
+            HI,ASHWANI<span className="bg-[#ffe600] text-black px-1"> HERE.</span>
+            <span className="animate-blink">█</span>
           </h1>
 
-          <p className="text-[#555] dark:text-[#888] text-lg leading-relaxed mb-8 max-w-xl">
+          <p className="text-base leading-relaxed mb-8 max-w-xl border-l-4 border-black dark:border-white pl-4">
             Full Stack & AI Engineer building scalable systems, premium user experiences,
             and meaningful developer products.
           </p>
 
-          <div className="flex items-center gap-3 mb-10 flex-wrap">
+          <div className="flex items-center gap-4 mb-10 flex-wrap">
             <a
               href="#projects"
-              className="inline-flex items-center gap-2 rounded-lg bg-[#111] dark:bg-white px-5 py-2.5 text-sm font-medium text-white dark:text-black hover:bg-[#333] dark:hover:bg-[#e5e5e5] transition-colors"
+              className="inline-flex items-center gap-2 rounded-none border-2 border-black dark:border-white bg-black dark:bg-white px-5 py-2.5 text-sm font-bold uppercase text-white dark:text-black shadow-[4px_4px_0px_0px_#000] dark:shadow-[4px_4px_0px_0px_#fff] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none hover:bg-[#ffe600] hover:text-black dark:hover:bg-[#ffe600] dark:hover:text-black"
             >
-              View Projects <ArrowUpRight size={14} />
+              
+              View_Projects <ArrowUpRight size={14} />
             </a>
             <a
               href="/Myresume.pdf"
               download
-              className="inline-flex items-center gap-2 rounded-lg border border-[#d4d4d4] dark:border-[#2a2a2a] px-5 py-2.5 text-sm text-[#555] dark:text-[#bbb] hover:border-[#aaa] dark:hover:border-[#444] hover:text-[#111] dark:hover:text-white transition-colors"
+              className="inline-flex items-center gap-2 rounded-none border-2 border-black dark:border-white bg-white dark:bg-black px-5 py-2.5 text-sm font-bold uppercase shadow-[4px_4px_0px_0px_#000] dark:shadow-[4px_4px_0px_0px_#fff] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none hover:bg-[#ffe600] dark:hover:bg-[#ffe600] dark:hover:text-black"
             >
               Resume <Download size={14} />
             </a>
           </div>
 
-          <div className="flex items-center gap-2 flex-wrap">
+          <div className="flex items-center gap-3 flex-wrap">
             {socials.map((s) => (
               <a
                 key={s.label}
@@ -177,106 +180,112 @@ export default function Portfolio() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={s.label}
-                className="rounded-lg border border-[#e5e5e5] dark:border-[#1f1f1f] p-2.5 text-[#888] dark:text-[#777] hover:border-[#ccc] dark:hover:border-[#333] hover:text-[#111] dark:hover:text-white transition-all duration-200"
+                className="rounded-none border-2 border-black dark:border-white bg-white dark:bg-black p-2.5 shadow-[3px_3px_0px_0px_#000] dark:shadow-[3px_3px_0px_0px_#fff] active:translate-x-[3px] active:translate-y-[3px] active:shadow-none hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black"
               >
                 {s.icon}
               </a>
             ))}
           </div>
-        </motion.section>
+        </section>
 
         {/* About */}
-        <motion.section
-          id="about"
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="mb-24"
-        >
-          <SectionLabel>About</SectionLabel>
-          <p className="text-[#444] dark:text-[#aaa] leading-relaxed text-base">
-            Self-taught developer driven by curiosity, execution, and the ambition to build
-            technology that creates real impact. Passionate about architecting scalable systems,
-            crafting refined user experiences, and exploring the intersection of software and AI.
-            Focused on moving fast, thinking deeply, and turning ambitious ideas into
-            production-ready products.
-          </p>
-        </motion.section>
+        <section id="about" className="mb-24">
+          <SectionLabel index="001">About</SectionLabel>
+          <div className="border-2 border-black dark:border-white bg-white dark:bg-black p-5 shadow-[4px_4px_0px_0px_#000] dark:shadow-[4px_4px_0px_0px_#fff]">
+            <p className="leading-relaxed text-sm">
+              Self-taught developer driven by curiosity, execution, and the ambition to build
+              technology that creates real impact. Passionate about architecting scalable systems,
+              crafting refined user experiences, and exploring the intersection of software and AI.
+              Focused on moving fast, thinking deeply, and turning ambitious ideas into
+              production-ready products.
+            </p>
+          </div>
+        </section>
 
         {/* Skills */}
-        <motion.section
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="mb-24"
-        >
-          <SectionLabel>Skills</SectionLabel>
-          <div className="flex flex-wrap gap-2">
+        <section className="mb-24">
+          <SectionLabel index="002">Skills</SectionLabel>
+          {/* Ticker tape — duplicated list scrolls -50% for a seamless loop */}
+          <div className="border-2 border-black dark:border-white bg-white dark:bg-black shadow-[4px_4px_0px_0px_#000] dark:shadow-[4px_4px_0px_0px_#fff] overflow-hidden mb-4">
+            <div className="flex w-max animate-marquee">
+              {[...skills, ...skills].map((skill, i) => (
+                <span
+                  key={`${skill}-${i}`}
+                  className="border-r-2 border-black dark:border-white px-4 py-2.5 text-xs font-bold uppercase whitespace-nowrap hover:bg-[#ffe600] hover:text-black"
+                >
+                  {skill}
+                </span>
+              ))}
+            </div>
+          </div>
+          {/* <div className="flex flex-wrap gap-0 border-2 border-black dark:border-white bg-white dark:bg-black">
             {skills.map((skill) => (
               <span
                 key={skill}
-                className="rounded-md border border-[#e5e5e5] dark:border-[#1f1f1f] bg-[#f5f5f5] dark:bg-[#111] px-3 py-1.5 text-sm text-[#555] dark:text-[#bbb]"
+                className="rounded-none border border-black dark:border-white px-3 py-1.5 text-xs font-bold uppercase -m-px hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black"
               >
                 {skill}
               </span>
             ))}
-          </div>
-        </motion.section>
+          </div> */}
+        </section>
 
         {/* Experience */}
         <Experience />
 
         {/* Projects */}
-        <motion.section
-          id="projects"
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="mb-24"
-        >
-          <SectionLabel>Projects</SectionLabel>
-          <div className="flex flex-col gap-5">
-            {projects.map((project) => (
+        <section id="projects" className="mb-24">
+          <SectionLabel index="004">Projects</SectionLabel>
+          <div className="flex flex-col gap-8">
+            {projects.map((project, i) => (
               <div
                 key={project.title}
-                className="group rounded-xl border border-[#e5e5e5] dark:border-[#1f1f1f] bg-[#fafafa] dark:bg-[#0f0f0f] overflow-hidden hover:border-[#ccc] dark:hover:border-[#2e2e2e] transition-colors duration-300"
+                className="group rounded-none border-2 border-black dark:border-white bg-white dark:bg-black shadow-[6px_6px_0px_0px_#000] dark:shadow-[6px_6px_0px_0px_#fff] hover:shadow-[2px_2px_0px_0px_#000] dark:hover:shadow-[2px_2px_0px_0px_#fff] hover:translate-x-[4px] hover:translate-y-[4px]"
               >
-                <div className="overflow-hidden">
+                {/* Window chrome title bar */}
+                <div className="flex items-center justify-between border-b-2 border-black dark:border-white bg-[#ffe600] px-3 py-1.5">
+                  <span className="text-xs font-bold uppercase text-black">
+                    {String(i + 1).padStart(2, "0")}_{project.title.replace(/\s+/g, "_").toLowerCase()}.exe
+                  </span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="h-3 w-3 border-2 border-black bg-white" />
+                    <span className="h-3 w-3 border-2 border-black bg-white" />
+                    <span className="h-3 w-3 border-2 border-black bg-black" />
+                  </div>
+                </div>
+                <div className="border-b-2 border-black dark:border-white">
                   <img
                     src={project.image}
                     alt={project.title}
-                    className="h-48 w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="h-48 w-full object-cover grayscale group-hover:grayscale-0"
                   />
                 </div>
                 <div className="p-5">
                   <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-semibold text-[#111] dark:text-white text-base">
+                    <h3 className="font-bold uppercase text-base">
                       {project.title}
                     </h3>
-                    <span className="text-xs text-[#aaa] dark:text-[#555]">{project.year}</span>
+                    <span className="text-xs font-bold border-2 border-black dark:border-white px-2 py-0.5">{project.year}</span>
                   </div>
-                  <p className="text-sm text-[#666] dark:text-[#888] leading-relaxed mb-4">
+                  <p className="text-sm leading-relaxed mb-4">
                     {project.description}
                   </p>
                   <div className="flex flex-wrap gap-1.5 mb-4">
                     {project.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="rounded-md bg-[#ebebeb] dark:bg-[#161616] border border-[#e0e0e0] dark:border-[#1f1f1f] px-2 py-1 text-xs text-[#777] dark:text-[#777]"
+                        className="rounded-none bg-[#ffe600] border border-black px-2 py-1 text-xs font-bold uppercase text-black"
                       >
                         {tag}
                       </span>
                     ))}
                   </div>
-                  <div className="flex gap-4">
+                  <div className="flex gap-3">
                     <a
                       href={project.github}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-xs text-[#888] dark:text-[#777] hover:text-[#111] dark:hover:text-white transition-colors"
+                      className="inline-flex items-center gap-1 text-xs font-bold uppercase border-2 border-black dark:border-white px-3 py-1.5 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black active:translate-x-[2px] active:translate-y-[2px]"
                     >
                       Source <ExternalLink size={11} />
                     </a>
@@ -284,7 +293,7 @@ export default function Portfolio() {
                       href={project.live}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-xs text-[#888] dark:text-[#777] hover:text-[#111] dark:hover:text-white transition-colors"
+                      className="inline-flex items-center gap-1 text-xs font-bold uppercase border-2 border-black dark:border-white px-3 py-1.5 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black active:translate-x-[2px] active:translate-y-[2px]"
                     >
                       Website <ExternalLink size={11} />
                     </a>
@@ -293,35 +302,31 @@ export default function Portfolio() {
               </div>
             ))}
           </div>
-        </motion.section>
+        </section>
+
+        {/* GitHub Contributions */}
+        <Contributions isDark={isDark} />
 
         {/* Contact */}
-        <motion.section
-          id="contact"
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="mb-24"
-        >
-          <SectionLabel>Contact</SectionLabel>
-          <p className="text-[#555] dark:text-[#888] text-base mb-8 max-w-md leading-relaxed">
+        <section id="contact" className="mb-24">
+          <SectionLabel index="006">Contact</SectionLabel>
+          <p className="text-sm mb-8 max-w-md leading-relaxed border-l-4 border-black dark:border-white pl-4">
             Whether you have a startup idea, want to collaborate, or need help building
             scalable systems — my inbox is always open.
           </p>
 
-          <div className="rounded-xl border border-[#e5e5e5] dark:border-[#1f1f1f] bg-[#fafafa] dark:bg-[#0f0f0f] p-6 mb-6">
+          <div className="rounded-none border-2 border-black dark:border-white bg-white dark:bg-black p-6 mb-8 shadow-[6px_6px_0px_0px_#000] dark:shadow-[6px_6px_0px_0px_#fff]">
             <ContactForm />
           </div>
 
-          <div className="flex items-center gap-2 flex-wrap">
+          <div className="flex items-center gap-3 flex-wrap">
             {socials.map((s) => (
               <a
                 key={s.label}
                 href={s.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-lg border border-[#e5e5e5] dark:border-[#1f1f1f] px-4 py-2.5 text-sm text-[#777] dark:text-[#777] hover:border-[#ccc] dark:hover:border-[#333] hover:text-[#111] dark:hover:text-white transition-all duration-200"
+                className="inline-flex items-center gap-2 rounded-none border-2 border-black dark:border-white bg-white dark:bg-black px-4 py-2.5 text-xs font-bold uppercase shadow-[3px_3px_0px_0px_#000] dark:shadow-[3px_3px_0px_0px_#fff] active:translate-x-[3px] active:translate-y-[3px] active:shadow-none hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black"
               >
                 {s.icon}
                 <span>{s.label}</span>
@@ -329,11 +334,15 @@ export default function Portfolio() {
               </a>
             ))}
           </div>
-        </motion.section>
+        </section>
 
         {/* Footer */}
-        <footer className="border-t border-[#e8e8e8] dark:border-[#1a1a1a] pt-8 pb-4">
-          <p className="text-sm text-[#ccc] dark:text-[#3a3a3a]">© 2026 Ashwani Singh</p>
+        <footer className="border-t-2 border-black dark:border-white pt-8 pb-4 flex items-center justify-between gap-4 flex-wrap">
+          <p className="text-xs font-bold uppercase tracking-widest">
+            <span className="bg-black dark:bg-white text-white dark:text-black px-1.5 py-0.5 mr-2">[EOF]</span>
+            © 2026 ASHWANI_SINGH
+          </p>
+          <p className="text-xs font-bold uppercase tracking-widest">BUILT_WITH: REACT + TAILWIND</p>
         </footer>
       </main>
     </div>
