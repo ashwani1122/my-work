@@ -146,12 +146,12 @@ export default function Portfolio() {
           </p>
 
           <h1 className="text-xl md:text-2xl sm:text-2xl font-bold uppercase tracking-tight mb-5 leading-tight">
-            HI,ASHWANI<span className="bg-[#ffe600] text-black px-1"> HERE.</span>
+            HI,ASHWANI<span className=" text-black dark:text-white px-1"> HERE.</span>
             <span className="animate-blink">█</span>
           </h1>
 
           <p className="text-base leading-relaxed mb-8 max-w-xl border-l-4 border-black dark:border-white pl-4">
-            Full Stack & AI Engineer building scalable systems, premium user experiences,
+            Full Stack & AI Engineer building Agentic products, premium user experiences,
             and meaningful developer products.
           </p>
 
@@ -194,7 +194,7 @@ export default function Portfolio() {
           <div className="border-2 border-black dark:border-white bg-white dark:bg-black p-5 shadow-[4px_4px_0px_0px_#000] dark:shadow-[4px_4px_0px_0px_#fff]">
             <p className="leading-relaxed text-sm">
               Self-taught developer driven by curiosity, execution, and the ambition to build
-              technology that creates real impact. Passionate about architecting scalable systems,
+              technology that creates real impact. Passionate about architecting Agentic products,
               crafting refined user experiences, and exploring the intersection of software and AI.
               Focused on moving fast, thinking deeply, and turning ambitious ideas into
               production-ready products.
@@ -312,7 +312,7 @@ export default function Portfolio() {
           <SectionLabel index="006">Contact</SectionLabel>
           <p className="text-sm mb-8 max-w-md leading-relaxed border-l-4 border-black dark:border-white pl-4">
             Whether you have a startup idea, want to collaborate, or need help building
-            scalable systems — my inbox is always open.
+            Agentic products — my inbox is always open.
           </p>
 
           <div className="rounded-none border-2 border-black dark:border-white bg-white dark:bg-black p-6 mb-8 shadow-[6px_6px_0px_0px_#000] dark:shadow-[6px_6px_0px_0px_#fff]">
