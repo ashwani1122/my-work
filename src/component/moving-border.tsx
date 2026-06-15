@@ -7,6 +7,7 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import Experience from "./experience";
 import ContactForm from "./contactForm";
 import { Contributions } from "./contribution";
+import LiveAge from "./dob";
 
 const skills = [
   "React", "Next.js", "TypeScript", "Node.js", "PostgreSQL",
@@ -137,9 +138,8 @@ export default function Portfolio() {
       <main className="mx-auto max-w-2xl px-6 py-16">
         {/* Hero */}
         <section id="home" className="mb-24">
-          <div className="inline-flex items-center gap-2 mb-6 border-2 border-black dark:border-white px-3 py-1 bg-white dark:bg-black">
-            <span className="h-2 w-2 bg-green-500 animate-blink" />
-            <span className="text-xs font-bold uppercase tracking-wider">status: available_for_work</span>
+          <div className="inline-flex items-center gap-2 mb-6  bg-white dark:bg-black">
+            <span className="text-xs font-bold uppercase "><LiveAge /></span>
           </div>
 
           <p className="text-xs font-bold uppercase tracking-widest mb-3">
