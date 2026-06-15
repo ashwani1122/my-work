@@ -145,7 +145,7 @@ export default function Portfolio() {
           <p className="text-xs font-bold uppercase tracking-widest mb-3">
           </p>
 
-          <h1 className="text-4xl md:text-6xl font-bold uppercase tracking-tight mb-5 leading-tight">
+          <h1 className="text-xl md:text-2xl sm:text-2xl font-bold uppercase tracking-tight mb-5 leading-tight">
             HI,ASHWANI<span className="bg-[#ffe600] text-black px-1"> HERE.</span>
             <span className="animate-blink">█</span>
           </h1>
@@ -155,7 +155,7 @@ export default function Portfolio() {
             and meaningful developer products.
           </p>
 
-          <div className="flex items-center gap-4 mb-10 flex-wrap">
+          <div className="flex sm:flex items-center gap-4 mb-10 flex-wrap">
             <a
               href="#projects"
               className="inline-flex items-center gap-2 rounded-none border-2 border-black dark:border-white bg-black dark:bg-white px-5 py-2.5 text-sm font-bold uppercase text-white dark:text-black shadow-[4px_4px_0px_0px_#000] dark:shadow-[4px_4px_0px_0px_#fff] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none hover:bg-[#ffe600] hover:text-black dark:hover:bg-[#ffe600] dark:hover:text-black"
