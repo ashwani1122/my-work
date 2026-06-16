@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ArrowUpRight, Download, ExternalLink, Sun, Moon } from "lucide-react";
+import { ArrowUpRight, Download, ExternalLink, Sun, Moon, Play } from "lucide-react";
 import XIcon from '@mui/icons-material/X';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import GitHubIcon from '@mui/icons-material/GitHub';
@@ -22,6 +22,7 @@ const projects = [
     image: "../assets/resumeapp.png",
     live: "https://resumeapp.in",
     github: "https://resumeapp.in",
+    demo: "https://www.youtube.com/watch?v=IJXd9Jla14U",
     description: "AI-powered resume builder creating ATS-optimized resumes with GPT-4 enhancement and real-time preview.",
     tags: ["Next.js", "TypeScript", "GPT-4", "PDF Export"],
   },
@@ -40,6 +41,7 @@ const projects = [
     image: "../assets/flowforge.png",
     live: "https://workflow-automation-black.vercel.app",
     github: "https://github.com/ashwani1122/workflow-automation",
+    demo: "https://www.youtube.com/watch?v=8cAox1foGsQ",
     description: "Visual workflow automation platform inspired by Zapier and n8n.",
     tags: ["Next.js", "TypeScript", "Node.js", "React Flow"],
   },
@@ -145,7 +147,7 @@ export default function Portfolio() {
           <p className="text-xs font-bold uppercase tracking-widest mb-3">
           </p>
 
-          <h1 className="text-xl md:text-2xl sm:text-2xl font-bold uppercase tracking-tight mb-5 leading-tight">
+          <h1 className="text-2xl  md:text-5xl font-bold uppercase tracking-tight mb-5 leading-tight">
             HI,ASHWANI<span className=" text-black dark:text-white px-1"> HERE.</span>
             <span className="animate-blink">█</span>
           </h1>
@@ -297,6 +299,16 @@ export default function Portfolio() {
                     >
                       Website <ExternalLink size={11} />
                     </a>
+                    {project.demo && (
+                      <a
+                        href={project.demo}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-xs font-bold uppercase border-2 border-black dark:border-white px-3 py-1.5 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black active:translate-x-[2px] active:translate-y-[2px]"
+                      >
+                        View_Demo <Play size={11} />
+                      </a>
+                    )}
                   </div>
                 </div>
               </div>
