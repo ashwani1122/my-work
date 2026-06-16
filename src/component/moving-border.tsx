@@ -32,6 +32,7 @@ const projects = [
     image: "../assets/agency-auditor.png",
     live: "https://agency-auditor.vercel.app",
     github: "https://agency-auditor.vercel.app",
+    demo: "https://www.youtube.com/watch?v=Tf3pPcQKYVk",
     description: "AI tool that audits marketing agency reports and delivers blunt verdicts on real performance vs. vanity metrics.",
     tags: ["Next.js", "TypeScript", "AI", "Dodo Payments"],
   },
