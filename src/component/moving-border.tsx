@@ -17,6 +17,14 @@ const skills = [
 
 const projects = [
   {
+    title: "Cogent CLI",
+    year: "2026",
+    image: "../assets/cogent.svg",
+    github: "https://github.com/ashwani1122/claude",
+    description: "Minimal coding-agent CLI with multi-provider support (Groq, Gemini, Anthropic), built-in file, git and shell tools, session management and a polished Ink terminal UI.",
+    tags: ["TypeScript", "Node.js", "Ink", "Groq", "Gemini", "Anthropic"],
+  },
+  {
     title: "ResumeAI",
     year: "2026",
     image: "../assets/resumeapp.png",
@@ -292,14 +300,16 @@ export default function Portfolio() {
                     >
                       Source <ExternalLink size={11} />
                     </a>
-                    <a
-                      href={project.live}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-xs font-bold uppercase border-2 border-black dark:border-white px-3 py-1.5 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black active:translate-x-[2px] active:translate-y-[2px]"
-                    >
-                      Website <ExternalLink size={11} />
-                    </a>
+                    {project.live && (
+                      <a
+                        href={project.live}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-xs font-bold uppercase border-2 border-black dark:border-white px-3 py-1.5 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black active:translate-x-[2px] active:translate-y-[2px]"
+                      >
+                        Website <ExternalLink size={11} />
+                      </a>
+                    )}
                     {project.demo && (
                       <a
                         href={project.demo}
