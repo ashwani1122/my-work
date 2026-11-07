@@ -10,14 +10,14 @@ import {
 const AMBIENT_COUNT = 16;
 
 const HERO_START = 0.4;
-const HERO_STAGGER = 0.2;
-const HERO_REVEAL = 0.65;
+const HERO_STAGGER = 0.26;
+const HERO_REVEAL = 0.85;
 const ENTER_RATIO = 0.88;
-const SCROLL_SPEED = 780;
-const MIN_SCROLL_DURATION = 5.5;
-const MAX_SCROLL_DURATION = 8.8;
-const STAMP_HOLD = 0.8;
-const REWIND_DURATION = 0.9;
+const SCROLL_SPEED = 560;
+const MIN_SCROLL_DURATION = 7.5;
+const MAX_SCROLL_DURATION = 11.5;
+const COMPLETE_HOLD = 0.6;
+const REWIND_DURATION = 1.1;
 
 const clamp = (value: number, min: number, max: number) =>
   Math.min(max, Math.max(min, value));
@@ -132,7 +132,6 @@ export default function IntroSequence({
   onComplete: () => void;
 }) {
   const [metas, setMetas] = useState<TargetMeta[]>([]);
-  const [complete, setComplete] = useState(false);
   const [exiting, setExiting] = useState(false);
   const [viewport, setViewport] = useState(() => ({
     w: typeof window === "undefined" ? 1440 : window.innerWidth,
@@ -267,7 +266,8 @@ export default function IntroSequence({
       heroCount > 0
         ? HERO_START + (heroCount - 1) * HERO_STAGGER + HERO_REVEAL
         : HERO_START;
-    const scrollStart = heroEnd + 0.28;
+    // Hold on the fully revealed hero before the page starts moving.
+    const scrollStart = heroEnd + 0.9;
 
     const startedAt = performance.now();
     html.dataset.introStarted = String(startedAt);
@@ -330,11 +330,11 @@ export default function IntroSequence({
         entering.sort((a, b) => a.rect.top - b.rect.top);
         entering.forEach(({ target, rect }, i) => {
           target.triggered = true;
-          target.start = t + i * 0.07;
+          target.start = t + i * 0.1;
           target.duration = clamp(
-            0.62 + Math.max(rect.width, rect.height) / 2800,
-            0.68,
-            0.9,
+            0.75 + Math.max(rect.width, rect.height) / 3000,
+            0.85,
+            1.15,
           );
         });
       }
@@ -371,7 +371,7 @@ export default function IntroSequence({
           if (!target.triggered) {
             target.triggered = true;
             target.start = t;
-            target.duration = 0.6;
+            target.duration = 0.7;
           }
         }
       }
@@ -443,7 +443,7 @@ export default function IntroSequence({
 
         const anchor = cornerOf(rect, target.from);
         const opposite = cornerOf(rect, oppositeCorner(target.from));
-        const appearAt = target.start - 0.48;
+        const appearAt = target.start - 0.6;
 
         let pointerX = anchor.x;
         let pointerY = anchor.y;
@@ -454,7 +454,7 @@ export default function IntroSequence({
 
         if (t >= appearAt) {
           if (t < target.start) {
-            const p = easeOutCubic(clamp((t - appearAt) / 0.48, 0, 1));
+            const p = easeOutCubic(clamp((t - appearAt) / 0.6, 0, 1));
             const launch = launchPoint(rect, target.from, i);
             pointerX = lerp(launch.x, anchor.x, p);
             pointerY = lerp(launch.y, anchor.y, p);
@@ -527,13 +527,12 @@ export default function IntroSequence({
         completeRef.current = true;
         completeAt = t;
         window.scrollTo(0, scrollMax);
-        setComplete(true);
       }
 
       if (
         completeRef.current &&
         !rewindStarted &&
-        t >= completeAt + STAMP_HOLD
+        t >= completeAt + COMPLETE_HOLD
       ) {
         rewindStarted = true;
         rewindAt = t;
@@ -760,31 +759,6 @@ export default function IntroSequence({
           0%
         </span>
       </div>
-
-      {/* Completion stamp */}
-      {complete && (
-        <>
-          <div className="intro-flash pointer-events-none absolute inset-0 z-[60] bg-[#ffe600]" />
-          <div
-            className={`pointer-events-none absolute inset-0 z-[70] grid place-items-center p-6 transition-opacity duration-300 ${
-              exiting ? "opacity-0" : "opacity-100"
-            }`}
-          >
-            <div className="intro-stamp rotate-[-2deg] border-4 border-black bg-[#ffe600] px-4 py-3 text-center text-black shadow-[5px_5px_0_0_#000] sm:px-6 sm:py-4 sm:shadow-[8px_8px_0_0_#000] dark:border-white dark:shadow-[5px_5px_0_0_#fff] dark:sm:shadow-[8px_8px_0_0_#fff]">
-              <p className="text-[7px] font-bold uppercase tracking-[0.32em] sm:text-[8px]">
-                render_status
-              </p>
-              <p className="mt-1 text-2xl font-extrabold uppercase tracking-tight sm:text-4xl">
-                RENDER_COMPLETE
-              </p>
-              <p className="mt-1 text-[9px] font-bold uppercase tracking-[0.16em]">
-                {metas.length}/{metas.length} components · 0 errors ·{" "}
-                {metas.length + AMBIENT_COUNT} cursors
-              </p>
-            </div>
-          </div>
-        </>
-      )}
 
       {/* Bottom HUD */}
       <div

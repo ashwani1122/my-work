@@ -238,7 +238,7 @@ export default function Portfolio() {
                   <img
                     src={project.image}
                     alt={project.title}
-                    className="h-48 w-full object-cover grayscale group-hover:grayscale-0"
+                    className="block h-auto w-full grayscale group-hover:grayscale-0"
                   />
                 </div>
                 <div className="p-5">

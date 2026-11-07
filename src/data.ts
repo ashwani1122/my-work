@@ -35,16 +35,6 @@ export const projects: Project[] = [
     tags: ["Next.js", "TypeScript", "GPT-4", "PDF Export"],
   },
   {
-    title: "Agency Auditor",
-    year: "2026",
-    image: "../assets/agency-auditor.png",
-    live: "https://agency-auditor.vercel.app",
-    github: "https://agency-auditor.vercel.app",
-    demo: "https://www.youtube.com/watch?v=Tf3pPcQKYVk",
-    description: "AI tool that audits marketing agency reports and delivers blunt verdicts on real performance vs. vanity metrics.",
-    tags: ["Next.js", "TypeScript", "AI", "Dodo Payments"],
-  },
-  {
     title: "Workflow Automation",
     year: "2025",
     image: "../assets/flowforge.png",

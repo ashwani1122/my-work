@@ -49,7 +49,12 @@ export default function ContactForm() {
           setStatus("error");
           setErrorMessage(error?.text ?? "Something went wrong. Please try again.");
         }
-      );
+      ).finally(() => {
+        setTimeout(() => {
+          setStatus(null);
+          setErrorMessage(null);
+        }, 5000);
+      });
   };
 
   return (
