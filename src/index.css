@@ -75,3 +75,98 @@ html {
 .animate-marquee:hover {
   animation-play-state: paused;
 }
+
+/* Intro sequence */
+@keyframes intro-drift {
+  from {
+    offset-distance: 0%;
+  }
+  to {
+    offset-distance: 100%;
+  }
+}
+.intro-drift {
+  animation-name: intro-drift;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: offset-distance;
+}
+
+/* Real-page intro: every target is hidden until an agent draws it in place. */
+html[data-intro-playing] [data-intro] {
+  clip-path: inset(0 100% 100% 0);
+}
+
+/* Extra room below the footer so the camera can bring it into view. */
+html[data-intro-playing] [data-portfolio-page] {
+  padding-top: 66px;
+  padding-bottom: 55vh;
+}
+
+/* Sticky stops working while the document is scroll-locked, so pin the real
+   header in place and reserve its height above the page content. */
+html[data-intro-playing] [data-intro="header"] {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 60;
+}
+
+html[data-intro-playing] {
+  scrollbar-width: none;
+}
+html[data-intro-playing]::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes intro-stamp-in {
+  0% {
+    opacity: 0;
+    transform: rotate(-7deg) scale(0.72);
+  }
+  100% {
+    opacity: 1;
+    transform: rotate(-2deg) scale(1);
+  }
+}
+.intro-stamp {
+  animation: intro-stamp-in 360ms cubic-bezier(0.2, 1.35, 0.35, 1) both;
+}
+
+@keyframes intro-flash {
+  0% {
+    opacity: 0;
+  }
+  18% {
+    opacity: 0.17;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+.intro-flash {
+  animation: intro-flash 440ms ease-out both;
+}
+
+@keyframes page-reveal {
+  from {
+    opacity: 0.92;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.page-reveal {
+  animation: page-reveal 500ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee,
+  .animate-blink,
+  .intro-stamp,
+  .intro-flash {
+    animation: none !important;
+  }
+}
+

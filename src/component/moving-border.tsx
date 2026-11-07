@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useCallback, useLayoutEffect, useState } from "react";
 import { ArrowUpRight, Download, ExternalLink, Sun, Moon, Play } from "lucide-react";
 import XIcon from '@mui/icons-material/X';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
@@ -8,71 +8,8 @@ import Experience from "./experience";
 import ContactForm from "./contactForm";
 import { Contributions } from "./contribution";
 import LiveAge from "./dob";
-
-const skills = [
-  "React", "Next.js", "TypeScript", "Node.js", "PostgreSQL",
-  "MongoDB", "Docker", "Redis", "Tailwind", "Prisma",
-  "AWS", "Kafka", "Kubernetes", "Python", "FastAPI", "Java",
-];
-
-const projects = [
-  {
-    title: "Cogent CLI",
-    year: "2026",
-    image: "../assets/cogent.svg",
-    github: "https://github.com/ashwani1122/claude",
-    description: "Minimal coding-agent CLI with multi-provider support (Groq, Gemini, Anthropic), built-in file, git and shell tools, session management and a polished Ink terminal UI.",
-    tags: ["TypeScript", "Node.js", "Ink", "Groq", "Gemini", "Anthropic"],
-  },
-  {
-    title: "ResumeAI",
-    year: "2026",
-    image: "../assets/resumeapp.png",
-    live: "https://resumeapp.in",
-    github: "https://resumeapp.in",
-    demo: "https://www.youtube.com/watch?v=IJXd9Jla14U",
-    description: "AI-powered resume builder creating ATS-optimized resumes with GPT-4 enhancement and real-time preview.",
-    tags: ["Next.js", "TypeScript", "GPT-4", "PDF Export"],
-  },
-  {
-    title: "Agency Auditor",
-    year: "2026",
-    image: "../assets/agency-auditor.png",
-    live: "https://agency-auditor.vercel.app",
-    github: "https://agency-auditor.vercel.app",
-    demo: "https://www.youtube.com/watch?v=Tf3pPcQKYVk",
-    description: "AI tool that audits marketing agency reports and delivers blunt verdicts on real performance vs. vanity metrics.",
-    tags: ["Next.js", "TypeScript", "AI", "Dodo Payments"],
-  },
-  {
-    title: "Workflow Automation",
-    year: "2025",
-    image: "../assets/flowforge.png",
-    live: "https://workflow-automation-black.vercel.app",
-    github: "https://github.com/ashwani1122/workflow-automation",
-    demo: "https://www.youtube.com/watch?v=8cAox1foGsQ",
-    description: "Visual workflow automation platform inspired by Zapier and n8n.",
-    tags: ["Next.js", "TypeScript", "Node.js", "React Flow"],
-  },
-  {
-    title: "Claude Sub Agent",
-    year: "2025",
-    image: "../assets/sub-agent.png",
-    live: "https://claude-sub-agent.vercel.app",
-    github: "https://github.com/ashwani1122/claude-sub-agent",
-    description: "AI-powered sub-agent orchestration system for autonomous tasks.",
-    tags: ["React", "TypeScript", "Claude API"],
-  },
-  {
-    title: "MemAI",
-    year: "2025",
-    image: "../assets/memai.jpg",
-    live: "https://github.com/ashwani1122/memeai",
-    github: "https://github.com/ashwani1122/memeai",
-    description: "AI meme generation platform combining creativity with automation.",
-    tags: ["Python", "OpenAI", "PostgreSQL", "Semantic Search", "Vector Database", "RAG", "Graph DB", "PyPI", "Next.js", "TypeScript"],
-  },
-];
+import { projects, skills } from "../data";
+import IntroSequence from "./intro";
 
 const socials = [
   { icon: <GitHubIcon fontSize="small" />, href: "https://github.com/ashwani1122", label: "GitHub" },
@@ -81,9 +18,9 @@ const socials = [
   { icon: <InstagramIcon fontSize="small" />, href: "https://www.instagram.com/ashwani123950", label: "Instagram" },
 ];
 
-function SectionLabel({ index, children }: { index: string; children: React.ReactNode }) {
+function SectionLabel({ index, children, dataIntro }: { index: string; children: React.ReactNode; dataIntro?: string }) {
   return (
-    <div className="flex items-center gap-3 mb-8">
+    <div data-intro={dataIntro} className="flex items-center gap-3 mb-8">
       <span className="rounded-none border-2 border-black dark:border-white bg-[#ffe600] px-2 py-1 text-xs font-bold text-black">
         {index}
       </span>
@@ -93,6 +30,18 @@ function SectionLabel({ index, children }: { index: string; children: React.Reac
   );
 }
 
+function shouldPlayIntro() {
+  if (typeof window === "undefined") return false;
+  try {
+    const intro = new URLSearchParams(window.location.search).get("intro");
+    if (intro === "0" || intro === "false") return false;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return false;
+    return true;
+  } catch {
+    return true;
+  }
+}
+
 export default function Portfolio() {
   const [isDark, setIsDark] = useState(() => {
     if (typeof window === "undefined") return true;
@@ -100,16 +49,36 @@ export default function Portfolio() {
     if (saved) return saved === "dark";
     return window.matchMedia("(prefers-color-scheme: dark)").matches;
   });
+  const [showIntro, setShowIntro] = useState(shouldPlayIntro);
+  const [introRun, setIntroRun] = useState(0);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     document.documentElement.classList.toggle("dark", isDark);
     localStorage.setItem("theme", isDark ? "dark" : "light");
   }, [isDark]);
 
+  const finishIntro = useCallback(() => {
+    setShowIntro(false);
+  }, []);
+
+  const replayIntro = useCallback(() => {
+    window.scrollTo(0, 0);
+    setIntroRun((run) => run + 1);
+    setShowIntro(true);
+  }, []);
+
   return (
-    <div className="min-h-screen bg-[#f4f1ea] dark:bg-black bg-grid text-black dark:text-white font-mono">
+    <>
+      <div
+        data-portfolio-page
+        inert={showIntro ? true : undefined}
+        aria-hidden={showIntro ? true : undefined}
+        className={`min-h-screen bg-[#f4f1ea] dark:bg-black bg-grid text-black dark:text-white font-mono ${
+          showIntro ? "" : "page-reveal"
+        }`}
+      >
       {/* Nav */}
-      <header className="sticky top-0 z-50 border-b-2 border-black dark:border-white bg-[#f4f1ea] dark:bg-black">
+      <header data-intro="header" className="sticky top-0 z-50 border-b-2 border-black dark:border-white bg-[#f4f1ea] dark:bg-black">
         <div className="mx-auto max-w-2xl px-6 h-16 flex items-center justify-between">
           <span className="font-bold text-sm uppercase tracking-tight bg-black dark:bg-white text-white dark:text-black px-2 py-1">
             ASHWANI_SINGH<span className="animate-blink">_</span>
@@ -149,24 +118,24 @@ export default function Portfolio() {
       <main className="mx-auto max-w-2xl px-6 py-16">
         {/* Hero */}
         <section id="home" className="mb-24">
-          <div className="inline-flex items-center gap-2 mb-6  bg-white dark:bg-black">
+          <div data-intro="live-age" className="inline-flex items-center gap-2 mb-6  bg-white dark:bg-black">
             <span className="text-xs font-bold uppercase "><LiveAge /></span>
           </div>
 
           <p className="text-xs font-bold uppercase tracking-widest mb-3">
           </p>
 
-          <h1 className="text-2xl  md:text-5xl font-bold uppercase tracking-tight mb-5 leading-tight">
+          <h1 data-intro="hero-headline" className="text-2xl  md:text-5xl font-bold uppercase tracking-tight mb-5 leading-tight">
             HI,ASHWANI<span className=" text-black dark:text-white px-1"> HERE.</span>
             <span className="animate-blink">█</span>
           </h1>
 
-          <p className="text-base leading-relaxed mb-8 max-w-xl border-l-4 border-black dark:border-white pl-4">
+          <p data-intro="hero-copy" className="text-base leading-relaxed mb-8 max-w-xl border-l-4 border-black dark:border-white pl-4">
             Full Stack & AI Engineer building Agentic products, premium user experiences,
             and meaningful developer products.
           </p>
 
-          <div className="flex sm:flex items-center gap-4 mb-10 flex-wrap">
+          <div data-intro="hero-actions" className="flex sm:flex items-center gap-4 mb-10 flex-wrap">
             <a
               href="#projects"
               className="inline-flex items-center gap-2 rounded-none border-2 border-black dark:border-white bg-black dark:bg-white px-5 py-2.5 text-sm font-bold uppercase text-white dark:text-black shadow-[4px_4px_0px_0px_#000] dark:shadow-[4px_4px_0px_0px_#fff] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none hover:bg-[#ffe600] hover:text-black dark:hover:bg-[#ffe600] dark:hover:text-black"
@@ -183,7 +152,7 @@ export default function Portfolio() {
             </a>
           </div>
 
-          <div className="flex items-center gap-3 flex-wrap">
+          <div data-intro="hero-socials" className="flex items-center gap-3 flex-wrap">
             {socials.map((s) => (
               <a
                 key={s.label}
@@ -201,8 +170,8 @@ export default function Portfolio() {
 
         {/* About */}
         <section id="about" className="mb-24">
-          <SectionLabel index="001">About</SectionLabel>
-          <div className="border-2 border-black dark:border-white bg-white dark:bg-black p-5 shadow-[4px_4px_0px_0px_#000] dark:shadow-[4px_4px_0px_0px_#fff]">
+          <SectionLabel index="001" dataIntro="about-label">About</SectionLabel>
+          <div data-intro="about-card" className="border-2 border-black dark:border-white bg-white dark:bg-black p-5 shadow-[4px_4px_0px_0px_#000] dark:shadow-[4px_4px_0px_0px_#fff]">
             <p className="leading-relaxed text-sm">
               Self-taught developer driven by curiosity, execution, and the ambition to build
               technology that creates real impact. Passionate about architecting Agentic products,
@@ -215,9 +184,9 @@ export default function Portfolio() {
 
         {/* Skills */}
         <section className="mb-24">
-          <SectionLabel index="002">Skills</SectionLabel>
+          <SectionLabel index="002" dataIntro="skills-label">Skills</SectionLabel>
           {/* Ticker tape — duplicated list scrolls -50% for a seamless loop */}
-          <div className="border-2 border-black dark:border-white bg-white dark:bg-black shadow-[4px_4px_0px_0px_#000] dark:shadow-[4px_4px_0px_0px_#fff] overflow-hidden mb-4">
+          <div data-intro="skills-ticker" className="border-2 border-black dark:border-white bg-white dark:bg-black shadow-[4px_4px_0px_0px_#000] dark:shadow-[4px_4px_0px_0px_#fff] overflow-hidden mb-4">
             <div className="flex w-max animate-marquee">
               {[...skills, ...skills].map((skill, i) => (
                 <span
@@ -246,11 +215,12 @@ export default function Portfolio() {
 
         {/* Projects */}
         <section id="projects" className="mb-24">
-          <SectionLabel index="004">Projects</SectionLabel>
+          <SectionLabel index="004" dataIntro="projects-label">Projects</SectionLabel>
           <div className="flex flex-col gap-8">
             {projects.map((project, i) => (
               <div
                 key={project.title}
+                data-intro={`project-card-${i + 1}`}
                 className="group rounded-none border-2 border-black dark:border-white bg-white dark:bg-black shadow-[6px_6px_0px_0px_#000] dark:shadow-[6px_6px_0px_0px_#fff] hover:shadow-[2px_2px_0px_0px_#000] dark:hover:shadow-[2px_2px_0px_0px_#fff] hover:translate-x-[4px] hover:translate-y-[4px]"
               >
                 {/* Window chrome title bar */}
@@ -332,17 +302,17 @@ export default function Portfolio() {
 
         {/* Contact */}
         <section id="contact" className="mb-24">
-          <SectionLabel index="006">Contact</SectionLabel>
-          <p className="text-sm mb-8 max-w-md leading-relaxed border-l-4 border-black dark:border-white pl-4">
+          <SectionLabel index="006" dataIntro="contact-label">Contact</SectionLabel>
+          <p data-intro="contact-copy" className="text-sm mb-8 max-w-md leading-relaxed border-l-4 border-black dark:border-white pl-4">
             Whether you have a startup idea, want to collaborate, or need help building
             Agentic products — my inbox is always open.
           </p>
 
-          <div className="rounded-none border-2 border-black dark:border-white bg-white dark:bg-black p-6 mb-8 shadow-[6px_6px_0px_0px_#000] dark:shadow-[6px_6px_0px_0px_#fff]">
+          <div data-intro="contact-form" className="rounded-none border-2 border-black dark:border-white bg-white dark:bg-black p-6 mb-8 shadow-[6px_6px_0px_0px_#000] dark:shadow-[6px_6px_0px_0px_#fff]">
             <ContactForm />
           </div>
 
-          <div className="flex items-center gap-3 flex-wrap">
+          <div data-intro="contact-socials" className="flex items-center gap-3 flex-wrap">
             {socials.map((s) => (
               <a
                 key={s.label}
@@ -360,14 +330,27 @@ export default function Portfolio() {
         </section>
 
         {/* Footer */}
-        <footer className="border-t-2 border-black dark:border-white pt-8 pb-4 flex items-center justify-between gap-4 flex-wrap">
+        <footer data-intro="footer" className="border-t-2 border-black dark:border-white pt-8 pb-4 flex items-center justify-between gap-4 flex-wrap">
           <p className="text-xs font-bold uppercase tracking-widest">
             <span className="bg-black dark:bg-white text-white dark:text-black px-1.5 py-0.5 mr-2">[EOF]</span>
             © 2026 ASHWANI_SINGH
           </p>
-          <p className="text-xs font-bold uppercase tracking-widest">BUILT_WITH: REACT + TAILWIND</p>
+          <div className="flex items-center gap-4 flex-wrap">
+            <p className="text-xs font-bold uppercase tracking-widest">BUILT_WITH: REACT + TAILWIND</p>
+            <button
+              type="button"
+              onClick={replayIntro}
+              className="text-xs font-bold uppercase tracking-widest underline decoration-2 underline-offset-4 hover:bg-[#ffe600] hover:text-black px-1"
+            >
+              ↻ REPLAY_INTRO
+            </button>
+          </div>
         </footer>
       </main>
-    </div>
+      </div>
+      {showIntro && (
+        <IntroSequence key={introRun} onComplete={finishIntro} />
+      )}
+    </>
   );
 }

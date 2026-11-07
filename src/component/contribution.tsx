@@ -3,7 +3,7 @@ import { GitHubCalendar } from 'react-github-calendar';
 export const Contributions = ({ isDark }: { isDark: boolean }) => {
   return (
     <section id="github" className="mb-24">
-      <div className="flex items-center gap-3 mb-8">
+      <div data-intro="github-label" className="flex items-center gap-3 mb-8">
         <span className="rounded-none border-2 border-black dark:border-white bg-[#ffe600] px-2 py-1 text-xs font-bold text-black">
           005
         </span>
@@ -11,7 +11,7 @@ export const Contributions = ({ isDark }: { isDark: boolean }) => {
         <span className="flex-1 h-[2px] bg-black dark:bg-white" />
       </div>
 
-      <div className="rounded-none border-2 border-black dark:border-white bg-white dark:bg-black shadow-[6px_6px_0px_0px_#000] dark:shadow-[6px_6px_0px_0px_#fff]">
+      <div data-intro="github-card" className="rounded-none border-2 border-black dark:border-white bg-white dark:bg-black shadow-[6px_6px_0px_0px_#000] dark:shadow-[6px_6px_0px_0px_#fff]">
         {/* Window chrome title bar */}
         <div className="flex items-center justify-between border-b-2 border-black dark:border-white bg-[#ffe600] px-3 py-1.5">
           <span className="text-xs font-bold uppercase text-black">
@@ -44,6 +44,7 @@ export const Contributions = ({ isDark }: { isDark: boolean }) => {
         href="https://github.com/ashwani1122"
         target="_blank"
         rel="noopener noreferrer"
+        data-intro="github-profile"
         className="mt-4 inline-flex items-center gap-2 rounded-none border-2 border-black dark:border-white bg-white dark:bg-black px-4 py-2 text-xs font-bold uppercase shadow-[3px_3px_0px_0px_#000] dark:shadow-[3px_3px_0px_0px_#fff] active:translate-x-[3px] active:translate-y-[3px] active:shadow-none hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black"
       >
         View_Full_Profile →

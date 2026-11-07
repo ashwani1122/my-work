@@ -1,32 +1,10 @@
 import { ExternalLink } from "lucide-react";
-
-const experiences = [
-  {
-    company: "Hibiscustech",
-    role: "Full Stack Product Engineer",
-    duration: "May 2026 — Present",
-    location: "Remote",
-    description:
-      "Developing end-to-end web applications using Next.js and Go. Working with PostgreSQL for database design, implementing CI/CD pipelines via GitHub Actions. Built the reward system for psyplay.io gaming platform with AI-driven coin mechanics and optimized sound features.",
-    skills: ["Next.js", "TypeScript", "Node.js", "React Query", "Tailwind", "GO", "AWS"],
-    link: "https://hibiscustech.org/",
-  },
-  {
-    company: "Nexo",
-    role: "Full Stack Developer — Freelance",
-    duration: "Aug 2025 — Dec 2025",
-    location: "Remote",
-    description:
-      "Developed full-stack applications with modern architectures, authentication systems, real-time chat, APIs, and reusable UI patterns focused on scalability and performance.",
-    skills: ["Node.js", "Supabase", "TypeScript", "React", "Express", "JWT", "PostgreSQL"],
-    link: "",
-  },
-];
+import { experiences } from "../data";
 
 export default function Experience() {
   return (
     <section id="experience" className="mb-24">
-      <div className="flex items-center gap-3 mb-8">
+      <div data-intro="experience-label" className="flex items-center gap-3 mb-8">
         <span className="rounded-none border-2 border-black dark:border-white bg-[#ffe600] px-2 py-1 text-xs font-bold text-black">
           003
         </span>
@@ -38,6 +16,7 @@ export default function Experience() {
         {experiences.map((exp, i) => (
           <div
             key={i}
+            data-intro={`experience-card-${i + 1}`}
             className="rounded-none border-2 border-black dark:border-white bg-white dark:bg-black p-5 shadow-[6px_6px_0px_0px_#000] dark:shadow-[6px_6px_0px_0px_#fff] hover:shadow-[2px_2px_0px_0px_#000] dark:hover:shadow-[2px_2px_0px_0px_#fff] hover:translate-x-[4px] hover:translate-y-[4px]"
           >
             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-3 border-b-2 border-black dark:border-white pb-3">
