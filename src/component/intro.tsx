@@ -29,7 +29,30 @@ const easeInOutCubic = (t: number) =>
   t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 
 type Corner = "tl" | "tr" | "bl" | "br";
-type Accent = "yellow" | "white";
+
+// Vibrant palette for the agent cursors, cycled across every agent.
+const CURSOR_COLORS = [
+  "#ff2e88", // hot pink
+  "#00e5ff", // electric cyan
+  "#9dff00", // acid lime
+  "#ff8a00", // vivid orange
+  "#b44cff", // neon violet
+  "#00ffa3", // mint
+  "#ff3b3b", // bright red
+  "#ffe600", // brand yellow
+] as const;
+
+type Accent = (typeof CURSOR_COLORS)[number];
+
+// Pick black or white ink so labels stay readable on any cursor color.
+const inkFor = (hex: string) => {
+  const value = Number.parseInt(hex.slice(1), 16);
+  const r = (value >> 16) & 255;
+  const g = (value >> 8) & 255;
+  const b = value & 255;
+  const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+  return luminance > 0.55 ? "#000000" : "#ffffff";
+};
 
 type TargetMeta = {
   id: string;
@@ -76,7 +99,7 @@ const launchPoint = (rect: DOMRect, corner: Corner, index: number) => {
 };
 
 function CursorSvg({
-  accent = "yellow",
+  accent = "#ffe600",
   size = 22,
 }: {
   accent?: Accent;
@@ -93,7 +116,7 @@ function CursorSvg({
     >
       <path
         d="M2 1.5L20 13.2L11.4 15.1L15.7 23.3L11.8 25.1L7.6 16.6L2 22.2V1.5Z"
-        fill={accent === "yellow" ? "#ffe600" : "#ffffff"}
+        fill={accent}
         stroke="#000000"
         strokeWidth="1.5"
         strokeLinejoin="round"
@@ -117,8 +140,9 @@ const buildAmbient = (width: number, height: number) => {
     path: paths[i % paths.length],
     duration: 14 + (i % 6) * 2.2,
     delay: -((i * 1.61) % 16),
-    opacity: 0.14 + (i % 3) * 0.06,
+    opacity: 0.32 + (i % 3) * 0.08,
     scale: 0.62 + (i % 4) * 0.07,
+    color: CURSOR_COLORS[i % CURSOR_COLORS.length],
     label:
       i % 6 === 0
         ? `${["ui", "ux", "dev", "qa"][i % 4]}_${String(i).padStart(2, "0")}`
@@ -233,7 +257,7 @@ export default function IntroSequence({
         el,
         id,
         tag: id.replace(/-/g, "_").toUpperCase(),
-        accent: i % 3 === 0 ? "yellow" : "white",
+        accent: CURSOR_COLORS[i % CURSOR_COLORS.length],
         from: corners[i % corners.length],
         hero,
         heroIndex: 0,
@@ -641,7 +665,7 @@ export default function IntroSequence({
               } as CSSProperties
             }
           >
-            <CursorSvg accent="white" size={16} />
+            <CursorSvg accent={agent.color} size={16} />
             {agent.label && (
               <span className="absolute left-3 top-3 whitespace-nowrap border border-black/25 bg-[#f4f1ea]/80 px-1 py-0.5 text-[7px] font-bold uppercase tracking-wider text-black/60 dark:border-white/25 dark:bg-black/80 dark:text-white/60">
                 {agent.label}
@@ -721,16 +745,15 @@ export default function IntroSequence({
             ref={(el) => {
               tagRefs.current[i] = el;
             }}
-            className={`absolute left-[15px] top-[17px] flex items-center gap-1 whitespace-nowrap border px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-[0.12em] opacity-0 ${
-              meta.accent === "yellow"
-                ? "border-black bg-[#ffe600] text-black"
-                : "border-black bg-black text-white dark:border-white dark:bg-white dark:text-black"
-            }`}
+            className="absolute left-[15px] top-[17px] flex items-center gap-1 whitespace-nowrap border border-black px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-[0.12em] opacity-0 dark:border-white"
+            style={{
+              backgroundColor: meta.accent,
+              color: inkFor(meta.accent),
+            }}
           >
             <span
-              className={`h-1.5 w-1.5 ${
-                meta.accent === "yellow" ? "bg-black" : "bg-[#ffe600]"
-              }`}
+              className="h-1.5 w-1.5"
+              style={{ backgroundColor: inkFor(meta.accent) }}
             />
             <span className="opacity-55">
               ag_{String(i + 1).padStart(2, "0")}

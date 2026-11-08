@@ -11,6 +11,10 @@ html {
   scroll-behavior: auto;
 }
 
+section[id] {
+  scroll-margin-top: 72px;
+}
+
 ::selection {
   background: #ffe600;
   color: #000;

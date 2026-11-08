@@ -1,4 +1,4 @@
-import { useCallback, useLayoutEffect, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import { ArrowUpRight, Download, ExternalLink, Sun, Moon, Play } from "lucide-react";
 import XIcon from '@mui/icons-material/X';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
@@ -30,11 +30,15 @@ function SectionLabel({ index, children, dataIntro }: { index: string; children:
   );
 }
 
+const INTRO_SESSION_KEY = "portfolio:intro-played";
+
 function shouldPlayIntro() {
   if (typeof window === "undefined") return false;
   try {
     const intro = new URLSearchParams(window.location.search).get("intro");
     if (intro === "0" || intro === "false") return false;
+    if (intro === "1" || intro === "true") return true;
+    if (sessionStorage.getItem(INTRO_SESSION_KEY) === "1") return false;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return false;
     return true;
   } catch {
@@ -58,7 +62,35 @@ export default function Portfolio() {
   }, [isDark]);
 
   const finishIntro = useCallback(() => {
+    try {
+      sessionStorage.setItem(INTRO_SESSION_KEY, "1");
+    } catch {
+      /* ignore */
+    }
+    document.documentElement.style.overflow = "";
+    document.body.style.overflow = "";
+    delete document.documentElement.dataset.introPlaying;
     setShowIntro(false);
+  }, []);
+
+  // Safety net: never leave the document scroll-locked once the intro is gone.
+  useEffect(() => {
+    if (showIntro) return;
+    document.documentElement.style.overflow = "";
+    document.body.style.overflow = "";
+    delete document.documentElement.dataset.introPlaying;
+  }, [showIntro]);
+
+  const scrollToSection = useCallback((id: string) => {
+    const target = document.getElementById(id);
+    if (!target) return;
+    const top = target.getBoundingClientRect().top + window.scrollY - 72;
+    window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+    try {
+      history.pushState(null, "", `#${id}`);
+    } catch {
+      /* ignore */
+    }
   }, []);
 
   const replayIntro = useCallback(() => {
@@ -85,15 +117,22 @@ export default function Portfolio() {
           </span>
           <div className="flex items-center gap-4">
             <nav className="hidden sm:flex items-center gap-4 text-sm font-bold uppercase">
-              {["About", "Projects", "Contact"].map((item) => (
-                <a
-                  key={item}
-                  href={`#${item.toLowerCase()}`}
-                  className="hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black px-1"
-                >
-                  {item}
-                </a>
-              ))}
+              {["About", "Projects", "Contact"].map((item) => {
+                const id = item.toLowerCase();
+                return (
+                  <a
+                    key={item}
+                    href={`#${id}`}
+                    onClick={(event) => {
+                      event.preventDefault();
+                      scrollToSection(id);
+                    }}
+                    className="hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black px-1"
+                  >
+                    {item}
+                  </a>
+                );
+              })}
               <a
                 href="/Myresume.pdf"
                 target="_blank"
