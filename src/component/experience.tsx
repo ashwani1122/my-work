@@ -4,11 +4,11 @@ import { experiences } from "../data";
 export default function Experience() {
   return (
     <section id="experience" className="mb-24">
-      <div data-intro="experience-label" className="flex items-center gap-3 mb-8">
-        <span className="rounded-none border-2 border-black dark:border-white bg-[#ffe600] px-2 py-1 text-xs font-bold text-black">
+      <div className="flex items-center gap-3 mb-8">
+        <span data-intro="experience-label-index" className="rounded-none border-2 border-black dark:border-white bg-[#ffe600] px-2 py-1 text-xs font-bold text-black">
           003
         </span>
-        <span className="text-xs font-bold uppercase tracking-widest">Work_Experience</span>
+        <span data-intro="experience-label-text" className="text-xs font-bold uppercase tracking-widest">Work_Experience</span>
         <span className="flex-1 h-[2px] bg-black dark:bg-white" />
       </div>
 
@@ -21,15 +21,16 @@ export default function Experience() {
           >
             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-3 border-b-2 border-black dark:border-white pb-3">
               <div>
-                <h3 className="font-bold uppercase text-base">{exp.role}</h3>
-                <p className="text-xs font-bold uppercase mt-1">
+                <h3 data-intro={`experience-role-${i + 1}`} className="font-bold uppercase text-base">{exp.role}</h3>
+                <p data-intro={`experience-company-${i + 1}`} className="text-xs font-bold uppercase mt-1">
                   {exp.company} :: {exp.location}
                 </p>
               </div>
               <div className="flex items-center gap-3 shrink-0">
-                <span className="text-xs font-bold border-2 border-black dark:border-white px-2 py-0.5">{exp.duration}</span>
+                <span data-intro={`experience-duration-${i + 1}`} className="text-xs font-bold border-2 border-black dark:border-white px-2 py-0.5">{exp.duration}</span>
                 {exp.link && (
                   <a
+                    data-intro={`experience-link-${i + 1}`}
                     href={exp.link}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -41,11 +42,11 @@ export default function Experience() {
               </div>
             </div>
 
-            <p className="text-sm leading-relaxed mb-4">
+            <p data-intro={`experience-description-${i + 1}`} className="text-sm leading-relaxed mb-4">
               {exp.description}
             </p>
 
-            <div className="flex flex-wrap gap-1.5">
+            <div data-intro-group={`experience-skills-${i + 1}`} className="flex flex-wrap gap-1.5">
               {exp.skills.map((skill) => (
                 <span
                   key={skill}

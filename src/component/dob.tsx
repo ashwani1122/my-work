@@ -26,7 +26,7 @@ export default function LiveAge() {
   }, []);
 
   return (
-    <div className="font-mono text-black dark:text-white text-sm sm:text-xl">
+    <div data-intro="live-age" className="font-mono text-black dark:text-white text-sm sm:text-xl">
       been here for {age.toFixed(9)} years
     </div>
   );

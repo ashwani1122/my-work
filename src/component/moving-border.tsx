@@ -20,11 +20,11 @@ const socials = [
 
 function SectionLabel({ index, children, dataIntro }: { index: string; children: React.ReactNode; dataIntro?: string }) {
   return (
-    <div data-intro={dataIntro} className="flex items-center gap-3 mb-8">
-      <span className="rounded-none border-2 border-black dark:border-white bg-[#ffe600] px-2 py-1 text-xs font-bold text-black">
+    <div className="flex items-center gap-3 mb-8">
+      <span data-intro={dataIntro ? `${dataIntro}-index` : undefined} className="rounded-none border-2 border-black dark:border-white bg-[#ffe600] px-2 py-1 text-xs font-bold text-black">
         {index}
       </span>
-      <span className="text-xs font-bold uppercase tracking-widest">{children}</span>
+      <span data-intro={dataIntro ? `${dataIntro}-text` : undefined} className="text-xs font-bold uppercase tracking-widest">{children}</span>
       <span className="flex-1 h-[2px] bg-black dark:bg-white" />
     </div>
   );
@@ -110,13 +110,13 @@ export default function Portfolio() {
         }`}
       >
       {/* Nav */}
-      <header data-intro="header" className="sticky top-0 z-50 border-b-2 border-black dark:border-white bg-[#f4f1ea] dark:bg-black">
+      <header data-intro-header className="sticky top-0 z-50 border-b-2 border-black dark:border-white bg-[#f4f1ea] dark:bg-black">
         <div className="mx-auto max-w-2xl px-6 h-16 flex items-center justify-between">
-          <span className="font-bold text-sm uppercase tracking-tight bg-black dark:bg-white text-white dark:text-black px-2 py-1">
+          <span data-intro="brand" className="font-bold text-sm uppercase tracking-tight bg-black dark:bg-white text-white dark:text-black px-2 py-1">
             ASHWANI_SINGH<span className="animate-blink">_</span>
           </span>
           <div className="flex items-center gap-4">
-            <nav className="hidden sm:flex items-center gap-4 text-sm font-bold uppercase">
+            <nav data-intro-group="header-nav" className="hidden sm:flex items-center gap-4 text-sm font-bold uppercase">
               {["About", "Projects", "Contact"].map((item) => {
                 const id = item.toLowerCase();
                 return (
@@ -144,6 +144,7 @@ export default function Portfolio() {
 
             {/* Theme toggle */}
             <button
+              data-intro="theme-toggle"
               onClick={() => setIsDark(!isDark)}
               aria-label="Toggle theme"
               className="rounded-none border-2 border-black dark:border-white p-2 bg-white dark:bg-black shadow-[3px_3px_0px_0px_#000] dark:shadow-[3px_3px_0px_0px_#fff] active:translate-x-[3px] active:translate-y-[3px] active:shadow-none hover:bg-[#ffe600] dark:hover:bg-[#ffe600] dark:hover:text-black"
@@ -157,7 +158,7 @@ export default function Portfolio() {
       <main className="mx-auto max-w-2xl px-6 py-16">
         {/* Hero */}
         <section id="home" className="mb-24">
-          <div data-intro="live-age" className="inline-flex items-center gap-2 mb-6  bg-white dark:bg-black">
+          <div className="inline-flex items-center gap-2 mb-6  bg-white dark:bg-black">
             <span className="text-xs font-bold uppercase "><LiveAge /></span>
           </div>
 
@@ -174,7 +175,7 @@ export default function Portfolio() {
             and meaningful developer products.
           </p>
 
-          <div data-intro="hero-actions" className="flex sm:flex items-center gap-4 mb-10 flex-wrap">
+          <div data-intro-group="hero-actions" className="flex sm:flex items-center gap-4 mb-10 flex-wrap">
             <a
               href="#projects"
               className="inline-flex items-center gap-2 rounded-none border-2 border-black dark:border-white bg-black dark:bg-white px-5 py-2.5 text-sm font-bold uppercase text-white dark:text-black shadow-[4px_4px_0px_0px_#000] dark:shadow-[4px_4px_0px_0px_#fff] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none hover:bg-[#ffe600] hover:text-black dark:hover:bg-[#ffe600] dark:hover:text-black"
@@ -191,7 +192,7 @@ export default function Portfolio() {
             </a>
           </div>
 
-          <div data-intro="hero-socials" className="flex items-center gap-3 flex-wrap">
+          <div data-intro-group="hero-socials" className="flex items-center gap-3 flex-wrap">
             {socials.map((s) => (
               <a
                 key={s.label}
@@ -211,7 +212,7 @@ export default function Portfolio() {
         <section id="about" className="mb-24">
           <SectionLabel index="001" dataIntro="about-label">About</SectionLabel>
           <div data-intro="about-card" className="border-2 border-black dark:border-white bg-white dark:bg-black p-5 shadow-[4px_4px_0px_0px_#000] dark:shadow-[4px_4px_0px_0px_#fff]">
-            <p className="leading-relaxed text-sm">
+            <p data-intro="about-copy" className="leading-relaxed text-sm">
               Self-taught developer driven by curiosity, execution, and the ambition to build
               technology that creates real impact. Passionate about architecting Agentic products,
               crafting refined user experiences, and exploring the intersection of software and AI.
@@ -264,7 +265,7 @@ export default function Portfolio() {
               >
                 {/* Window chrome title bar */}
                 <div className="flex items-center justify-between border-b-2 border-black dark:border-white bg-[#ffe600] px-3 py-1.5">
-                  <span className="text-xs font-bold uppercase text-black">
+                  <span data-intro={`project-titlebar-${i + 1}`} className="text-xs font-bold uppercase text-black">
                     {String(i + 1).padStart(2, "0")}_{project.title.replace(/\s+/g, "_").toLowerCase()}.exe
                   </span>
                   <div className="flex items-center gap-1.5">
@@ -273,7 +274,7 @@ export default function Portfolio() {
                     <span className="h-3 w-3 border-2 border-black bg-black" />
                   </div>
                 </div>
-                <div className="border-b-2 border-black dark:border-white">
+                <div data-intro={`project-image-${i + 1}`} className="border-b-2 border-black dark:border-white">
                   <img
                     src={project.image}
                     alt={project.title}
@@ -282,15 +283,15 @@ export default function Portfolio() {
                 </div>
                 <div className="p-5">
                   <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-bold uppercase text-base">
+                    <h3 data-intro={`project-title-${i + 1}`} className="font-bold uppercase text-base">
                       {project.title}
                     </h3>
-                    <span className="text-xs font-bold border-2 border-black dark:border-white px-2 py-0.5">{project.year}</span>
+                    <span data-intro={`project-year-${i + 1}`} className="text-xs font-bold border-2 border-black dark:border-white px-2 py-0.5">{project.year}</span>
                   </div>
-                  <p className="text-sm leading-relaxed mb-4">
+                  <p data-intro={`project-description-${i + 1}`} className="text-sm leading-relaxed mb-4">
                     {project.description}
                   </p>
-                  <div className="flex flex-wrap gap-1.5 mb-4">
+                  <div data-intro-group={`project-tags-${i + 1}`} className="flex flex-wrap gap-1.5 mb-4">
                     {project.tags.map((tag) => (
                       <span
                         key={tag}
@@ -300,7 +301,7 @@ export default function Portfolio() {
                       </span>
                     ))}
                   </div>
-                  <div className="flex gap-3">
+                  <div data-intro-group={`project-actions-${i + 1}`} className="flex gap-3">
                     <a
                       href={project.github}
                       target="_blank"
@@ -351,7 +352,7 @@ export default function Portfolio() {
             <ContactForm />
           </div>
 
-          <div data-intro="contact-socials" className="flex items-center gap-3 flex-wrap">
+          <div data-intro-group="contact-socials" className="flex items-center gap-3 flex-wrap">
             {socials.map((s) => (
               <a
                 key={s.label}
@@ -370,14 +371,15 @@ export default function Portfolio() {
 
         {/* Footer */}
         <footer data-intro="footer" className="border-t-2 border-black dark:border-white pt-8 pb-4 flex items-center justify-between gap-4 flex-wrap">
-          <p className="text-xs font-bold uppercase tracking-widest">
+          <p data-intro="footer-copyright" className="text-xs font-bold uppercase tracking-widest">
             <span className="bg-black dark:bg-white text-white dark:text-black px-1.5 py-0.5 mr-2">[EOF]</span>
             © 2026 ASHWANI_SINGH
           </p>
           <div className="flex items-center gap-4 flex-wrap">
-            <p className="text-xs font-bold uppercase tracking-widest">BUILT_WITH: REACT + TAILWIND</p>
+            <p data-intro="footer-built" className="text-xs font-bold uppercase tracking-widest">BUILT_WITH: REACT + TAILWIND</p>
             <button
               type="button"
+              data-intro="footer-replay"
               onClick={replayIntro}
               className="text-xs font-bold uppercase tracking-widest underline decoration-2 underline-offset-4 hover:bg-[#ffe600] hover:text-black px-1"
             >

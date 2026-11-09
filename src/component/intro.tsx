@@ -9,20 +9,40 @@ import {
 
 const AMBIENT_COUNT = 16;
 
-const HERO_START = 0.4;
-const HERO_STAGGER = 0.26;
-const HERO_REVEAL = 0.85;
-const ENTER_RATIO = 0.88;
-const SCROLL_SPEED = 560;
-const MIN_SCROLL_DURATION = 7.5;
-const MAX_SCROLL_DURATION = 11.5;
-const COMPLETE_HOLD = 0.6;
+// The drawing pass is intentionally slow: 80% slower than the original
+// timing, then sped up by another 20% (5x -> ~4.17x the original duration).
+const REVEAL_SPEED = 0.24;
+const SLOWDOWN = 1 / REVEAL_SPEED;
+
+const INITIAL_DELAY = 0.35;
+const ENTER_STAGGER = 0.06;
+const GROUP_REVEAL = 0.34 * SLOWDOWN;
+
+// Only draw components that are properly inside the visible window. The bottom
+// HUD covers part of the viewport, so leave a safety band above it instead of
+// starting a reveal behind the overlay. The fixed header is itself a reveal
+// target container, so the top edge stays usable.
+const BOTTOM_SAFE = 64;
+const REVEAL_MARGIN = 48;
+
+// Scroll in whole-viewport steps. The page only moves after everything in the
+// current window has finished drawing, and drawing pauses while it moves.
+// The step stays smaller than the reveal zone so no component is ever skipped.
+const SCROLL_STEP = 0.75;
+const SCROLL_SPEED = 1000;
+const MIN_SCROLL_DURATION = 0.75;
+const MAX_SCROLL_DURATION = 1.4;
+const SETTLE_DELAY = 0.15;
+const COMPLETE_HOLD = 0.8;
 const REWIND_DURATION = 1.1;
 
 const clamp = (value: number, min: number, max: number) =>
   Math.min(max, Math.max(min, value));
 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+
+const revealDuration = (rect: DOMRect) =>
+  clamp(0.28 + Math.max(rect.width, rect.height) / 2600, 0.3, 0.65) * SLOWDOWN;
 
 const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
 const easeInOutCubic = (t: number) =>
@@ -44,27 +64,17 @@ const CURSOR_COLORS = [
 
 type Accent = (typeof CURSOR_COLORS)[number];
 
-// Pick black or white ink so labels stay readable on any cursor color.
-const inkFor = (hex: string) => {
-  const value = Number.parseInt(hex.slice(1), 16);
-  const r = (value >> 16) & 255;
-  const g = (value >> 8) & 255;
-  const b = value & 255;
-  const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
-  return luminance > 0.55 ? "#000000" : "#ffffff";
-};
-
 type TargetMeta = {
   id: string;
   tag: string;
   accent: Accent;
   from: Corner;
-  hero: boolean;
-  heroIndex: number;
 };
 
 type TargetRuntime = TargetMeta & {
   el: HTMLElement;
+  parent: TargetRuntime | null;
+  children: TargetRuntime[];
   triggered: boolean;
   start: number;
   duration: number;
@@ -177,11 +187,7 @@ export default function IntroSequence({
   const scrollPctRef = useRef<HTMLSpanElement | null>(null);
 
   const cursorRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const tagRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const boxRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const dimRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const slotRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const doneRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const ambient = useMemo(
     () => buildAmbient(viewport.w, viewport.h),
@@ -209,11 +215,42 @@ export default function IntroSequence({
     const html = document.documentElement;
     const body = document.body;
     const page = document.querySelector<HTMLElement>("[data-portfolio-page]");
-    const elements = Array.from(
-      document.querySelectorAll<HTMLElement>("[data-intro]"),
+    const sources = Array.from(
+      document.querySelectorAll<HTMLElement>(
+        "[data-intro], [data-intro-group]",
+      ),
     );
+    const elements: { el: HTMLElement; id: string }[] = [];
+    const seen = new Set<HTMLElement>();
 
-    if (!page || elements.length === 0) {
+    // Groups (button rows, social rows, tag rows) expand into one target per
+    // child so every control gets its own agent, slot and draw animation.
+    for (const source of sources) {
+      if (seen.has(source)) continue;
+      if (source.dataset.intro) {
+        elements.push({ el: source, id: source.dataset.intro });
+        seen.add(source);
+        continue;
+      }
+      const group = source.dataset.introGroup || "group";
+      Array.from(source.children).forEach((child, i) => {
+        if (!(child instanceof HTMLElement) || seen.has(child)) return;
+        elements.push({
+          el: child,
+          id: child.dataset.intro || `${group}-${i + 1}`,
+        });
+        seen.add(child);
+      });
+    }
+
+    // Hidden responsive elements (for example the desktop nav on a phone)
+    // should not consume an agent or stall the hero sequence.
+    const targets = elements.filter(({ el }) => {
+      const rect = el.getBoundingClientRect();
+      return rect.width > 0 || rect.height > 0;
+    });
+
+    if (!page || targets.length === 0) {
       onCompleteRef.current();
       return;
     }
@@ -239,39 +276,42 @@ export default function IntroSequence({
     window.scrollTo(0, 0);
 
     const originalClip = new Map<HTMLElement, string>();
-    for (const el of elements) {
+    for (const { el } of targets) {
       originalClip.set(el, el.style.clipPath);
       el.style.clipPath = "inset(0 100% 100% 0)";
     }
 
-    const vh = window.innerHeight;
-    const heroSection = document.getElementById("home");
-    const isHeroElement = (el: HTMLElement) =>
-      Boolean(el.closest("header")) ||
-      Boolean(heroSection && heroSection.contains(el));
-
-    const runtime: TargetRuntime[] = elements.map((el, i) => {
-      const id = el.dataset.intro || `block-${i + 1}`;
-      const hero = isHeroElement(el) && el.getBoundingClientRect().top < vh * 0.92;
+    const runtime: TargetRuntime[] = targets.map(({ el, id }, i) => {
       return {
         el,
         id,
         tag: id.replace(/-/g, "_").toUpperCase(),
         accent: CURSOR_COLORS[i % CURSOR_COLORS.length],
         from: corners[i % corners.length],
-        hero,
-        heroIndex: 0,
+        parent: null,
+        children: [],
         triggered: false,
         start: Number.POSITIVE_INFINITY,
-        duration: HERO_REVEAL,
+        duration: 0,
         done: false,
         doneAt: 0,
       };
     });
 
-    let heroCount = 0;
+    // Link nested targets to the nearest parent target. A card frame draws
+    // first; the text and buttons inside it wait until the frame is done.
+    const targetByEl = new Map<HTMLElement, TargetRuntime>();
+    for (const target of runtime) targetByEl.set(target.el, target);
     for (const target of runtime) {
-      if (target.hero) target.heroIndex = heroCount++;
+      let ancestor = target.el.parentElement;
+      while (ancestor && !targetByEl.has(ancestor)) {
+        ancestor = ancestor.parentElement;
+      }
+      const parent = ancestor ? targetByEl.get(ancestor) : null;
+      if (parent) {
+        target.parent = parent;
+        parent.children.push(target);
+      }
     }
 
     setMetas(
@@ -280,18 +320,8 @@ export default function IntroSequence({
         tag: target.tag,
         accent: target.accent,
         from: target.from,
-        hero: target.hero,
-        heroIndex: target.heroIndex,
       })),
     );
-
-    const heroTargets = runtime.filter((target) => target.hero);
-    const heroEnd =
-      heroCount > 0
-        ? HERO_START + (heroCount - 1) * HERO_STAGGER + HERO_REVEAL
-        : HERO_START;
-    // Hold on the fully revealed hero before the page starts moving.
-    const scrollStart = heroEnd + 0.9;
 
     const startedAt = performance.now();
     html.dataset.introStarted = String(startedAt);
@@ -311,10 +341,12 @@ export default function IntroSequence({
     window.addEventListener("keydown", onKeyDown);
 
     let raf = 0;
-    let scrollStarted = false;
-    let scrollStartAt = 0;
-    let scrollMax = 0;
-    let scrollDuration = 0;
+    let phase: "reveal" | "scroll" = "reveal";
+    let phaseStartedAt = INITIAL_DELAY;
+    let scrollFrom = 0;
+    let scrollTo = 0;
+    let scrollPhaseStart = 0;
+    let scrollPhaseDuration = 0;
     let completeAt = 0;
     let rewindStarted = false;
     let rewindAt = 0;
@@ -326,15 +358,13 @@ export default function IntroSequence({
     const tick = (now: number) => {
       const t = (now - startedAt) / 1000;
       const viewHeight = window.innerHeight;
-
-      // Hero targets are drawn in place before the page starts scrolling.
-      for (const target of heroTargets) {
-        if (!target.triggered && t >= HERO_START + target.heroIndex * HERO_STAGGER) {
-          target.triggered = true;
-          target.start = HERO_START + target.heroIndex * HERO_STAGGER;
-          target.duration = HERO_REVEAL;
-        }
-      }
+      const revealBottom = viewHeight - BOTTOM_SAFE - REVEAL_MARGIN;
+      const inRevealZone = (rect: DOMRect) =>
+        rect.top <= revealBottom && rect.bottom > 0;
+      const maxScroll = Math.max(
+        0,
+        document.documentElement.scrollHeight - viewHeight,
+      );
 
       // Read every target rect once per frame, before any writes.
       const frames = runtime.map((target) => ({
@@ -342,62 +372,36 @@ export default function IntroSequence({
         rect: target.el.getBoundingClientRect(),
       }));
 
-      // Scrolled targets are drawn as soon as they enter the viewport.
-      if (t >= scrollStart) {
+      // Scroll phases move the page in one eased step. No target is allowed
+      // to start drawing until the camera has completely stopped again.
+      if (phase === "scroll") {
+        const p = clamp((t - scrollPhaseStart) / scrollPhaseDuration, 0, 1);
+        window.scrollTo(
+          0,
+          Math.round(lerp(scrollFrom, scrollTo, easeInOutCubic(p))),
+        );
+        if (p >= 1) {
+          phase = "reveal";
+          phaseStartedAt = t + SETTLE_DELAY;
+        }
+      }
+
+      // Draw everything currently inside the window. Roots (section frames)
+      // go first; nested text and controls wait for their parent frame.
+      if (phase === "reveal" && t >= phaseStartedAt && !rewindStarted) {
         const entering = frames.filter(
           ({ target, rect }) =>
-            !target.hero &&
             !target.triggered &&
-            rect.top <= viewHeight * ENTER_RATIO &&
-            rect.bottom > 8,
+            (!target.parent || target.parent.done) &&
+            inRevealZone(rect),
         );
         entering.sort((a, b) => a.rect.top - b.rect.top);
         entering.forEach(({ target, rect }, i) => {
           target.triggered = true;
-          target.start = t + i * 0.1;
-          target.duration = clamp(
-            0.75 + Math.max(rect.width, rect.height) / 3000,
-            0.85,
-            1.15,
-          );
+          target.start = t + i * ENTER_STAGGER;
+          target.duration =
+            target.children.length > 0 ? GROUP_REVEAL : revealDuration(rect);
         });
-      }
-
-      let scrollY = window.scrollY;
-
-      if (t >= scrollStart) {
-        if (!scrollStarted) {
-          scrollStarted = true;
-          scrollStartAt = t;
-          scrollMax = Math.max(
-            0,
-            document.documentElement.scrollHeight - viewHeight,
-          );
-          scrollDuration = clamp(
-            scrollMax / SCROLL_SPEED,
-            MIN_SCROLL_DURATION,
-            MAX_SCROLL_DURATION,
-          );
-        }
-
-        if (!rewindStarted) {
-          const progress = clamp((t - scrollStartAt) / scrollDuration, 0, 1);
-          scrollY = Math.round(progress * scrollMax);
-          window.scrollTo(0, scrollY);
-        }
-      }
-
-      const scrollDone =
-        scrollStarted && t >= scrollStartAt + scrollDuration;
-
-      if (scrollDone && !rewindStarted) {
-        for (const target of runtime) {
-          if (!target.triggered) {
-            target.triggered = true;
-            target.start = t;
-            target.duration = 0.7;
-          }
-        }
       }
 
       // Finish any reveal whose window has elapsed.
@@ -413,6 +417,75 @@ export default function IntroSequence({
         }
       }
 
+      // A window is complete only when every target inside it has finished
+      // drawing. Only then may the camera move to the next window.
+      const allDone = runtime.every((target) => target.done);
+      const pendingInView = frames.some(
+        ({ target, rect }) => !target.done && inRevealZone(rect),
+      );
+
+      if (
+        phase === "reveal" &&
+        t >= phaseStartedAt &&
+        !rewindStarted &&
+        !pendingInView
+      ) {
+        if (allDone) {
+          if (!completeRef.current) {
+            completeRef.current = true;
+            completeAt = t;
+          }
+        } else {
+          const currentY = window.scrollY;
+          let nextY = Math.min(
+            maxScroll,
+            currentY + Math.round(viewHeight * SCROLL_STEP),
+          );
+
+          if (nextY <= currentY + 1) {
+            // Safety net: there is nowhere left to scroll, so draw any
+            // remaining off-screen targets instead of stalling forever.
+            for (const target of runtime) {
+              if (!target.triggered) {
+                target.triggered = true;
+                target.start = t;
+                target.duration = revealDuration(
+                  target.el.getBoundingClientRect(),
+                );
+              }
+            }
+          } else {
+            // Skip empty windows so the camera never stops on a screen that
+            // has nothing new to draw.
+            while (nextY < maxScroll) {
+              const hasUnrevealed = frames.some(({ target, rect }) => {
+                if (target.done) return false;
+                const docTop = rect.top + currentY;
+                const docBottom = rect.bottom + currentY;
+                const topInWindow = docTop - nextY;
+                const bottomInWindow = docBottom - nextY;
+                return topInWindow <= revealBottom && bottomInWindow > 0;
+              });
+              if (hasUnrevealed) break;
+              nextY = Math.min(
+                maxScroll,
+                nextY + Math.round(viewHeight * SCROLL_STEP),
+              );
+            }
+
+            phase = "scroll";
+            scrollFrom = currentY;
+            scrollTo = nextY;
+            scrollPhaseStart = t;
+            scrollPhaseDuration = clamp(
+              Math.abs(nextY - currentY) / SCROLL_SPEED,
+              MIN_SCROLL_DURATION,
+              MAX_SCROLL_DURATION,
+            );
+          }
+        }
+      }
+
       let doneCount = 0;
       let activeTag = "";
       let activeStart = -Infinity;
@@ -420,11 +493,7 @@ export default function IntroSequence({
       for (let i = 0; i < frames.length; i++) {
         const { target, rect } = frames[i];
         const cursor = cursorRefs.current[i];
-        const tag = tagRefs.current[i];
-        const box = boxRefs.current[i];
-        const dim = dimRefs.current[i];
         const slot = slotRefs.current[i];
-        const badge = doneRefs.current[i];
         const onScreen = rect.bottom > 0 && rect.top < viewHeight;
 
         if (target.done) doneCount += 1;
@@ -442,9 +511,6 @@ export default function IntroSequence({
 
         if (!target.triggered) {
           if (cursor) cursor.style.opacity = "0";
-          if (tag) tag.style.opacity = "0";
-          if (box) box.style.opacity = "0";
-          if (badge) badge.style.opacity = "0";
           continue;
         }
 
@@ -455,12 +521,6 @@ export default function IntroSequence({
           if (cursor) {
             cursor.style.transform = `translate3d(${endPoint.x - 2}px, ${endPoint.y - 1.5}px, 0) scale(${1 - (1 - fade) * 0.18})`;
             cursor.style.opacity = String(fade);
-          }
-          if (tag) tag.style.opacity = "0";
-          if (box) box.style.opacity = "0";
-          if (badge) {
-            badge.style.opacity = String(clamp(1 - since / 0.7, 0, 1));
-            badge.style.transform = `translate3d(${rect.right - 8}px, ${rect.top - 8}px, 0)`;
           }
           continue;
         }
@@ -473,8 +533,6 @@ export default function IntroSequence({
         let pointerY = anchor.y;
         let cursorOpacity = 0;
         let cursorScale = 1;
-        let tagOpacity = 0;
-        let boxOpacity = 0;
 
         if (t >= appearAt) {
           if (t < target.start) {
@@ -500,8 +558,6 @@ export default function IntroSequence({
               rect.bottom,
             );
             cursorOpacity = 1;
-            tagOpacity = 1;
-            boxOpacity = 1;
             if (target.start > activeStart) {
               activeStart = target.start;
               activeTag = target.tag;
@@ -525,32 +581,6 @@ export default function IntroSequence({
           cursor.style.transform = `translate3d(${pointerX - 2}px, ${pointerY - 1.5}px, 0) scale(${cursorScale})`;
           cursor.style.opacity = String(cursorOpacity);
         }
-        if (tag) tag.style.opacity = String(tagOpacity);
-
-        if (box && dim) {
-          if (boxOpacity > 0) {
-            const left = Math.min(anchor.x, pointerX);
-            const top = Math.min(anchor.y, pointerY);
-            const right = Math.max(anchor.x, pointerX);
-            const bottom = Math.max(anchor.y, pointerY);
-            box.style.opacity = "1";
-            box.style.transform = `translate3d(${left}px, ${top}px, 0)`;
-            box.style.width = `${right - left}px`;
-            box.style.height = `${bottom - top}px`;
-            dim.textContent = `${Math.round(right - left)} × ${Math.round(bottom - top)}`;
-          } else {
-            box.style.opacity = "0";
-          }
-        }
-        if (badge) badge.style.opacity = "0";
-      }
-
-      const allDone = doneCount === runtime.length;
-
-      if (!completeRef.current && scrollDone && allDone) {
-        completeRef.current = true;
-        completeAt = t;
-        window.scrollTo(0, scrollMax);
       }
 
       if (
@@ -591,7 +621,7 @@ export default function IntroSequence({
       }
 
       const scrollPct =
-        scrollStarted && scrollMax > 0 ? clamp(scrollY / scrollMax, 0, 1) : 0;
+        maxScroll > 0 ? clamp(window.scrollY / maxScroll, 0, 1) : 0;
       if (Math.abs(scrollPct - lastScrollPct) > 0.002) {
         lastScrollPct = scrollPct;
         if (scrollFillRef.current) {
@@ -606,11 +636,11 @@ export default function IntroSequence({
         ? "render complete · 0 errors"
         : activeTag
           ? `${activeTag.toLowerCase()} is being drawn…`
-          : !scrollStarted
-            ? "agents drawing hero…"
-            : scrollDone
-              ? "finalizing render…"
-              : "agents scrolling page…";
+          : phase === "scroll"
+            ? "agents scrolling page…"
+            : runtime.some((target) => target.triggered)
+              ? "holding viewport…"
+              : "agents drawing hero…";
       if (status !== lastStatus && statusRef.current) {
         lastStatus = status;
         statusRef.current.textContent = status;
@@ -692,44 +722,6 @@ export default function IntroSequence({
         </div>
       ))}
 
-      {/* Drag selection boxes */}
-      {metas.map((meta, i) => (
-        <div
-          key={`box-${meta.id}`}
-          ref={(el) => {
-            boxRefs.current[i] = el;
-          }}
-          className="pointer-events-none absolute left-0 top-0 z-20 border border-dashed border-[#b8a600] dark:border-[#ffe600]"
-          style={{ opacity: 0, willChange: "transform, width, height" }}
-        >
-          <span className="absolute -left-[3px] -top-[3px] h-[5px] w-[5px] border border-black bg-[#ffe600] dark:border-white" />
-          <span className="absolute -right-[3px] -top-[3px] h-[5px] w-[5px] border border-black bg-[#ffe600] dark:border-white" />
-          <span className="absolute -bottom-[3px] -left-[3px] h-[5px] w-[5px] border border-black bg-[#ffe600] dark:border-white" />
-          <span className="absolute -bottom-[3px] -right-[3px] h-[5px] w-[5px] border border-black bg-[#ffe600] dark:border-white" />
-          <span
-            ref={(el) => {
-              dimRefs.current[i] = el;
-            }}
-            className="absolute -bottom-[13px] left-0 whitespace-nowrap bg-[#f4f1ea] px-0.5 text-[6px] font-bold tracking-[0.18em] text-[#7c6f00] dark:bg-black dark:text-[#ffe600]"
-          >
-            0 × 0
-          </span>
-        </div>
-      ))}
-
-      {/* Completion checks */}
-      {metas.map((meta, i) => (
-        <div
-          key={`done-${meta.id}`}
-          ref={(el) => {
-            doneRefs.current[i] = el;
-          }}
-          className="pointer-events-none absolute left-0 top-0 z-30 grid h-4 w-4 place-items-center border border-black bg-[#ffe600] text-[8px] font-bold text-black opacity-0"
-        >
-          ✓
-        </div>
-      ))}
-
       {/* Agent cursors */}
       {metas.map((meta, i) => (
         <div
@@ -741,25 +733,6 @@ export default function IntroSequence({
           style={{ transform: "translate3d(-100px,-100px,0)" }}
         >
           <CursorSvg accent={meta.accent} />
-          <div
-            ref={(el) => {
-              tagRefs.current[i] = el;
-            }}
-            className="absolute left-[15px] top-[17px] flex items-center gap-1 whitespace-nowrap border border-black px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-[0.12em] opacity-0 dark:border-white"
-            style={{
-              backgroundColor: meta.accent,
-              color: inkFor(meta.accent),
-            }}
-          >
-            <span
-              className="h-1.5 w-1.5"
-              style={{ backgroundColor: inkFor(meta.accent) }}
-            />
-            <span className="opacity-55">
-              ag_{String(i + 1).padStart(2, "0")}
-            </span>
-            <span>{meta.tag}</span>
-          </div>
         </div>
       ))}
 
@@ -801,7 +774,7 @@ export default function IntroSequence({
               </p>
               <p className="mt-0.5 hidden text-[7px] uppercase tracking-[0.16em] opacity-45 sm:block">
                 {metas.length} agents · {metas.length + AMBIENT_COUNT} cursors ·
-                scroll-linked
+                stop · draw · scroll
               </p>
             </div>
           </div>

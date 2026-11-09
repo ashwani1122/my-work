@@ -97,7 +97,8 @@ section[id] {
 }
 
 /* Real-page intro: every target is hidden until an agent draws it in place. */
-html[data-intro-playing] [data-intro] {
+html[data-intro-playing] [data-intro],
+html[data-intro-playing] [data-intro-group] > * {
   clip-path: inset(0 100% 100% 0);
 }
 
@@ -109,7 +110,7 @@ html[data-intro-playing] [data-portfolio-page] {
 
 /* Sticky stops working while the document is scroll-locked, so pin the real
    header in place and reserve its height above the page content. */
-html[data-intro-playing] [data-intro="header"] {
+html[data-intro-playing] [data-intro-header] {
   position: fixed;
   left: 0;
   right: 0;

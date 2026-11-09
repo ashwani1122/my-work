@@ -60,10 +60,11 @@ export default function ContactForm() {
   return (
     <form ref={form} onSubmit={sendEmail} aria-live="polite" className="flex flex-col gap-5">
       <div>
-        <label className={labelClass}>
+        <label data-intro="contact-label-name" className={labelClass}>
           user_name:
         </label>
         <input
+          data-intro="contact-input-name"
           type="text"
           name="user_name"
           required
@@ -73,10 +74,11 @@ export default function ContactForm() {
       </div>
 
       <div>
-        <label className={labelClass}>
+        <label data-intro="contact-label-email" className={labelClass}>
           email_address:
         </label>
         <input
+          data-intro="contact-input-email"
           type="email"
           name="user_email"
           required
@@ -86,10 +88,11 @@ export default function ContactForm() {
       </div>
 
       <div>
-        <label className={labelClass}>
+        <label data-intro="contact-label-message" className={labelClass}>
           message:
         </label>
         <textarea
+          data-intro="contact-textarea-message"
           name="user_message"
           required
           rows={5}
@@ -100,6 +103,7 @@ export default function ContactForm() {
 
       <div className="flex items-center justify-between gap-4 flex-wrap">
         <button
+          data-intro="contact-submit"
           type="submit"
           disabled={loading}
           className="inline-flex items-center gap-2 rounded-none border-2 border-black dark:border-white bg-black dark:bg-white px-5 py-2.5 text-sm font-bold uppercase text-white dark:text-black shadow-[4px_4px_0px_0px_#000] dark:shadow-[4px_4px_0px_0px_#fff] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none hover:bg-[#ffe600] hover:text-black dark:hover:bg-[#ffe600] dark:hover:text-black disabled:opacity-50 disabled:cursor-not-allowed"
